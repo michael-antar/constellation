@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
