@@ -7,7 +7,7 @@ export async function Header() {
 
   return (
     <header className="border-b">
-      <nav className="container flex items-center justify-between p-4">
+      <nav className="flex items-center justify-between p-4">
         <div className="flex gap-2 font-bold">
           <Sparkle />
           Constellation
