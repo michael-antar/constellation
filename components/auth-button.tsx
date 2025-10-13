@@ -26,7 +26,10 @@ export function AuthButton({ session }: AuthButtonProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Button
+          variant="outline"
+          className="relative h-8 w-8 rounded-full cursor-pointer"
+        >
           <Avatar className="h-9 w-9">
             <AvatarImage
               src={session?.user?.image ?? ""}
