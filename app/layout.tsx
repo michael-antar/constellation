@@ -17,8 +17,6 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <Providers>
-          {" "}
-          {/* Wrap everything with the Providers component */}
           <Header />
           <main className="container p-4">{children}</main>
         </Providers>
