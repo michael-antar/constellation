@@ -3,6 +3,8 @@
 import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import { User } from "lucide-react";
 
@@ -23,6 +26,26 @@ type AuthButtonProps = {
 };
 
 export function AuthButton({ session }: AuthButtonProps) {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+
+  useEffect(() => {
+    if (error) {
+      let message = "An unknown error occurred.";
+      switch (error) {
+        case "OAuthAccountNotLinked":
+          message = "This email is already linked with another provider.";
+          break;
+        case "CredentialsSignin":
+          message =
+            "Invalid credentials. Please check your email and password.";
+          break;
+        // Add more cases as needed
+      }
+      toast.error(message);
+    }
+  }, [error]);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -56,11 +79,7 @@ function SignedInContent({ session }: { session: Session }) {
         <p className="text-sm text-muted-foreground">{session.user?.email}</p>
       </div>
       <Separator />
-      <Button
-        variant="ghost"
-        onClick={() => signOut()}
-        className="w-full justify-start"
-      >
+      <Button onClick={() => signOut()} className="w-full justify-start">
         Sign Out
       </Button>
     </div>
@@ -70,11 +89,22 @@ function SignedInContent({ session }: { session: Session }) {
 function SignedOutContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     // Use the signIn function for credentials
-    signIn("credentials", { email, password, redirect: false });
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    setIsLoading(false);
+    if (result?.error) {
+      toast.error("Invalid email or password. Please try again.");
+    }
   };
 
   return (
@@ -126,7 +156,9 @@ function SignedOutContent() {
             required
           />
         </div>
-        <Button type="submit">Sign In</Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Signing In..." : "Sign In"}
+        </Button>
       </form>
 
       <Separator />

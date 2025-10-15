@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/header";
 import Providers from "@/components/providers";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Constellation",
@@ -19,6 +20,7 @@ export default async function RootLayout({
         <Providers>
           <Header />
           <main className="container p-4">{children}</main>
+          <Toaster />
         </Providers>
       </body>
     </html>
