@@ -126,11 +126,12 @@ function SignedOutContent() {
         </Button>
       </div>
 
-      <div className="relative">
-        <Separator className="absolute top-1/2" />
-        <p className="text-center text-xs text-muted-foreground bg-popover px-2">
+      <div className="relative flex items-center py-5">
+        <div className="flex-grow border-t border-border"></div>
+        <span className="mx-4 flex-shrink text-xs text-muted-foreground">
           OR CONTINUE WITH
-        </p>
+        </span>
+        <div className="flex-grow border-t border-border"></div>
       </div>
 
       {/* Credentials Form */}
