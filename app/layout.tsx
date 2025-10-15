@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Header } from "@/components/header";
 import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -17,11 +16,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>
-          <Header />
-          <main className="container p-4">{children}</main>
-          <Toaster />
-        </Providers>
+        <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );

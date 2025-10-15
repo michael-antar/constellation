@@ -79,9 +79,7 @@ function SignedInContent({ session }: { session: Session }) {
         <p className="text-sm text-muted-foreground">{session.user?.email}</p>
       </div>
       <Separator />
-      <Button onClick={() => signOut()} className="w-full justify-start">
-        Sign Out
-      </Button>
+      <Button onClick={() => signOut()}>Sign Out</Button>
     </div>
   );
 }
