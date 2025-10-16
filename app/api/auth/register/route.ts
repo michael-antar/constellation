@@ -19,9 +19,10 @@ export async function POST(request: Request) {
       SELECT id FROM users WHERE email = ${email}
     `;
     if (existingUser.length > 0) {
-      return new NextResponse("User with this email already exists", {
-        status: 409,
-      });
+      return NextResponse.json(
+        { message: "User with this email already exists." },
+        { status: 409 }
+      );
     }
 
     // Hash the password
@@ -40,10 +41,11 @@ export async function POST(request: Request) {
   } catch (error) {
     // If validation fails, Zod throws an error
     if (error instanceof ZodError) {
-      return new NextResponse(JSON.stringify(error.issues), { status: 400 });
+      const errorMessage = error.issues[0]?.message || "Invalid input.";
+      return NextResponse.json({ message: errorMessage }, { status: 400 });
     }
 
     console.error("Registration error:", error);
-    return new NextResponse("An error occurred", { status: 500 });
+    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }
 }
