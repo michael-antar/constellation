@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import Link from "next/link";
 import { AuthButton } from "./auth-button";
 import { Sparkle } from "lucide-react";
 
@@ -8,10 +9,10 @@ export async function Header() {
   return (
     <header className="border-b">
       <nav className="flex items-center justify-between p-4">
-        <div className="flex gap-2 font-bold">
+        <Link href="/" className="flex items-center gap-2 font-bold">
           <Sparkle />
           Constellation
-        </div>
+        </Link>
         <AuthButton session={session} />
       </nav>
     </header>

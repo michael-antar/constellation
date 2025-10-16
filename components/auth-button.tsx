@@ -1,6 +1,7 @@
 "use client";
 
 import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 import { signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -88,6 +89,7 @@ function SignedOutContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -102,6 +104,8 @@ function SignedOutContent() {
     setIsLoading(false);
     if (result?.error) {
       toast.error("Invalid email or password. Please try again.");
+    } else {
+      router.refresh();
     }
   };
 
