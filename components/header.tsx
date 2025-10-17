@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import Link from "next/link";
+import { ModeToggle } from "./mode-toggle";
 import { AuthButton } from "./auth-button";
 import { Sparkle } from "lucide-react";
 
@@ -13,7 +14,10 @@ export async function Header() {
           <Sparkle />
           Constellation
         </Link>
-        <AuthButton session={session} />
+        <div className="flex gap-4">
+          <ModeToggle />
+          <AuthButton session={session} />
+        </div>
       </nav>
     </header>
   );

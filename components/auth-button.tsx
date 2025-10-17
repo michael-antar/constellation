@@ -143,7 +143,7 @@ function SignedOutContent() {
           <Input
             id="email"
             type="email"
-            placeholder="m@example.com"
+            placeholder="name@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
