@@ -95,8 +95,12 @@ export function CreatePageForm() {
         </div>
         <div className="grid gap-2">
           <Label htmlFor="category">Category</Label>
-          <Select onValueChange={setCategoryId} value={categoryId}>
-            <SelectTrigger>
+          <Select
+            name="category"
+            onValueChange={setCategoryId}
+            value={categoryId}
+          >
+            <SelectTrigger id="category">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
             <SelectContent>
