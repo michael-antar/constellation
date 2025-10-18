@@ -1,11 +1,13 @@
 import { auth } from "@/auth";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./mode-toggle";
 import { AuthButton } from "./auth-button";
 import { Sparkle } from "lucide-react";
 
 export async function Header() {
   const session = await auth();
+  const isAdmin = session?.user?.role === "ADMIN";
 
   return (
     <header className="border-b">
@@ -15,6 +17,11 @@ export async function Header() {
           Constellation
         </Link>
         <div className="flex gap-4">
+          {isAdmin && (
+            <Button asChild>
+              <Link href="/create">Create Page</Link>
+            </Button>
+          )}
           <ModeToggle />
           <AuthButton session={session} />
         </div>
