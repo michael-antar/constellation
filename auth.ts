@@ -64,6 +64,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
       async jwt({ token, user }) {
         if (user) {
           token.id = user.id;
+          token.role = user.role; // I do not know how to get rid of this typescript error please help I've tried everything
         }
         return token;
       },
@@ -73,6 +74,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
       async session({ session, token }) {
         if (session.user && token.id) {
           session.user.id = token.id as string;
+          session.user.role = token.role as string;
         }
         return session;
       },

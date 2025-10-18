@@ -21,3 +21,11 @@ export const registerSchema = z.object({
     .min(8, "Password must be more than 8 characters")
     .max(32, "Password must be less than 32 characters"),
 });
+
+export const createPageSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters long"),
+  slug: z.string().min(3, "Slug must be at least 3 characters long"),
+  content: z.string().optional(),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  categoryId: z.uuid("Invalid category ID"),
+});
