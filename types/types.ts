@@ -1,7 +1,7 @@
 export type Category = {
-  id: string;
-  name: string;
-  color_hex: string | null;
+  id: string; // Unique identifier for category: UUID PRIMARY KEY DEFAULT'gen_random_uuid()'
+  name: string; // Display name for category: TEXT UNIQUE NOT NULL
+  color_hex: string | null; // Hex string for its color in the constellation: TEXT
 };
 
 export enum UserRole {
