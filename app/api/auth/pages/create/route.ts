@@ -3,11 +3,12 @@ import { neon } from "@neondatabase/serverless";
 import { auth } from "@/auth";
 import { createPageSchema } from "@/lib/zod";
 import { ZodError } from "zod";
+import { UserRole } from "@/types/types";
 
 export async function POST(request: Request) {
   // Authorize user session and role
   const session = await auth();
-  if (session?.user?.role !== "ADMIN") {
+  if (session?.user?.role !== UserRole.ADMIN) {
     return NextResponse.json({ message: "Forbidden" }, { status: 403 });
   }
 
