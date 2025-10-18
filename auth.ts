@@ -7,6 +7,20 @@ import { Pool } from "@neondatabase/serverless";
 import { signInSchema } from "./lib/zod";
 import { compare } from "bcryptjs";
 
+declare module "next-auth" {
+  interface User {
+    id: string;
+    role: string;
+  }
+}
+
+declare module "@auth/core/adapters" {
+  interface AdapterUser {
+    id: string;
+    role: string;
+  }
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth(() => {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
@@ -64,7 +78,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
       async jwt({ token, user }) {
         if (user) {
           token.id = user.id;
-          token.role = user.role; // I do not know how to get rid of this typescript error please help I've tried everything
+          token.role = user.role;
         }
         return token;
       },
