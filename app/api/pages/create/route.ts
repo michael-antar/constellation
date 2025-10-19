@@ -43,8 +43,8 @@ export async function POST(request: Request) {
   } catch (error) {
     // If validation fails, Zod throws an error
     if (error instanceof ZodError) {
-      const errorMessage = error.issues[0]?.message || "Invalid input.";
-      return NextResponse.json({ message: errorMessage }, { status: 400 });
+      const errorMessages = error.issues.map((issue) => issue.message);
+      return NextResponse.json({ message: errorMessages }, { status: 400 });
     }
 
     console.error("Page creation error:", error);
