@@ -1,5 +1,3 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import { CreatePageForm } from "@/components/create-page-form";
 import {
   Card,
@@ -7,15 +5,8 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { UserRole } from "@/types/types";
 
-export default async function CreatePage() {
-  // Redirect non-admins to the homepage
-  const session = await auth();
-  if (session?.user?.role !== UserRole.ADMIN) {
-    redirect("/");
-  }
-
+export default function CreatePage() {
   return (
     <div className="mx-auto w-full max-w-7xl">
       <Card>

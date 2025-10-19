@@ -20,7 +20,7 @@ export async function Header() {
         <div className="flex gap-4">
           {isAdmin && (
             <Button asChild>
-              <Link href="/create">Create Page</Link>
+              <Link href="/admin">Admin Dashboard</Link>
             </Button>
           )}
           <ModeToggle />
