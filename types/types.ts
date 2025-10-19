@@ -10,7 +10,7 @@ export type Page = {
   created_at: string; // When the page was first created: TIMESTAMPTZ NOT NULL DEFAULT 'now()'
   updated_at: string; // When the page was last updated: TIMESTAMPTZ NOT NULL DEFAULT 'now()'
   author_id: string; // The user responsible for the page: UUID FOREiGN KEY REFERENCES users.id ON DELETE SET NULL
-  category_id: string; // The category the page belongs to: UUID FOREIGN KEY REFERENCES categories.id ON DELETE RESTRICT
+  category_id: string | null; // The category the page belongs to: UUID FOREIGN KEY REFERENCES categories.id ON DELETE RESTRICT
 };
 
 /* 
