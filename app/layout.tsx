@@ -17,7 +17,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <Providers>{children}</Providers>
-        <Toaster />
+        <Toaster richColors />
       </body>
     </html>
   );
