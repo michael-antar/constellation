@@ -29,3 +29,11 @@ export const createPageSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters"),
   categoryId: z.uuid("Invalid category ID"),
 });
+
+export const createCategorySchema = z.object({
+  name: z.string().trim().min(1, "Category name cannot be empty."),
+  // This regex validates a 3 or 6-digit hex color code (e.g., #FFF or #AABBCC)
+  color_hex: z.string().regex(/^#([0-9a-f]{3}){1,2}$/i, {
+    message: "Must be a valid hex color code (e.g., #A4B3C1).",
+  }),
+});

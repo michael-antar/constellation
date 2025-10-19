@@ -6,7 +6,7 @@ import { ZodError } from "zod";
 import { UserRole } from "@/types/types";
 
 export async function POST(request: Request) {
-  // Authorize user session and role
+  // Get user session and authorize role (only admins can create pages)
   const session = await auth();
   if (session?.user?.role !== UserRole.ADMIN) {
     return NextResponse.json({ message: "Forbidden" }, { status: 403 });
