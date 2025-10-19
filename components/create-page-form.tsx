@@ -40,7 +40,7 @@ export function CreatePageForm() {
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
-  const [categoryId, setCategoryId] = useState("");
+  const [categoryId, setCategoryId] = useState<string | null>(null);
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -116,13 +116,16 @@ export function CreatePageForm() {
             <Label htmlFor="category">Category</Label>
             <Select
               name="category"
-              onValueChange={setCategoryId}
-              value={categoryId}
+              value={categoryId ?? ""}
+              onValueChange={(value) => {
+                setCategoryId(value === "none" ? null : value);
+              }}
             >
               <SelectTrigger id="category">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="none">None</SelectItem>
                 {categories.map((cat) => (
                   <SelectItem key={cat.id} value={cat.id}>
                     {cat.name}
