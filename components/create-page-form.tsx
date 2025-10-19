@@ -41,7 +41,6 @@ export function CreatePageForm() {
   }, [title]);
 
   // Fetch categories when the component mounts
-  // TODO: Create API endpoint for this at /api/categories
   useEffect(() => {
     const fetchCategories = async () => {
       const res = await fetch("/api/categories");
