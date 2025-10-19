@@ -74,25 +74,28 @@ export function CreatePageForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <CardContent className="space-y-4">
-        <div className="grid gap-2">
-          <Label htmlFor="title">Title</Label>
-          <Input
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
+      <CardContent className="space-y-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid gap-2">
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="slug">URL Slug</Label>
+            <Input
+              id="slug"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+              required
+            />
+          </div>
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor="slug">URL Slug</Label>
-          <Input
-            id="slug"
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-            required
-          />
-        </div>
+
         <div className="grid gap-2">
           <Label htmlFor="category">Category</Label>
           <Select
@@ -127,11 +130,12 @@ export function CreatePageForm() {
             id="content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            rows={15}
+            rows={25}
+            className="min-h-[400px]"
           />
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="pt-6">
         <Button type="submit" disabled={isLoading}>
           {isLoading ? "Creating..." : "Create Page"}
         </Button>

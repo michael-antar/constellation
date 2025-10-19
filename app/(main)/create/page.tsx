@@ -17,7 +17,7 @@ export default async function CreatePage() {
   }
 
   return (
-    <div className="container mx-auto max-w-2xl py-8">
+    <div className="mx-auto w-full max-w-7xl">
       <Card>
         <CardHeader>
           <CardTitle>Create a New Page</CardTitle>

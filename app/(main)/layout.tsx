@@ -8,7 +8,7 @@ export default function MainLayout({
   return (
     <>
       <Header />
-      <main className="container p-4">{children}</main>
+      <main className="p-4">{children}</main>
     </>
   );
 }
