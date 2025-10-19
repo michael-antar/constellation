@@ -12,7 +12,7 @@ Using a PostgreSQL database to handle the relationships.
 
 ### Users
 
-Stores information about your users, managed primarily by Auth.js. Used to handle _authentication_, _permissions_ (roles), and _attribute content_ like pages and comments to a specific person.
+Stores information about all users, managed primarily by Auth.js. Used to handle _authentication_, _permissions_ (roles), and _attribute content_ like pages and comments to a specific person.
 
 | Field        | Type          | Description                                                  |
 | ------------ | ------------- | ------------------------------------------------------------ |
@@ -99,10 +99,10 @@ WHERE id = '...';
 
 ### Definitions
 
-Stores terms and explanations for the hover-over definition feature. Used to provide a centralized place for storing reusable definitions that can be injected into any page via a component.
+Stores terms and explanations for the hover-over definition feature. Used to provide a centralized place for storing reusable definitions that can be injected into any page via an MDX component.
 
-| Field          | Type   | Description                                                            |
-| -------------- | ------ | ---------------------------------------------------------------------- |
-| `id`           | `UUID` | **PK**. A unique identifier for the definition.                        |
-| `term`         | `TEXT` | **UNIQUE, NOT NULL**. The word or acronym to be defined (e.g., "API"). |
-| `explaination` | `TEXT` | **NOT NULL**. The content of the definition pop-up.                    |
+| Field         | Type   | Description                                                            |
+| ------------- | ------ | ---------------------------------------------------------------------- |
+| `id`          | `UUID` | **PK**. A unique identifier for the definition.                        |
+| `term`        | `TEXT` | **UNIQUE, NOT NULL**. The word or acronym to be defined (e.g., "API"). |
+| `explanation` | `TEXT` | **NOT NULL**. The content of the definition pop-up.                    |

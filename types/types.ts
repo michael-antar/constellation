@@ -22,6 +22,15 @@ export type Category = {
   color_hex: string | null; // Hex string for its color in the constellation: TEXT
 };
 
+/*
+Stores terms and explanations for the hover-over definition feature. Used to provide a centralized place for storing reusable definitions that can be injected into any page via an MDX component.
+*/
+export type Definition = {
+  id: string; // Unique identifier for defintion: UUID PRIMARY KEY DEFAULT 'gen_random_uuid()'
+  term: string; // The word or acronym being defined (e.g., "Application Program Interface (API)"): TEXT UNIQUE NOT NULL
+  explanation: string; // The content of the definition pop-up: TEXT NOT NULL
+};
+
 export enum UserRole {
   USER = "USER",
   ADMIN = "ADMIN",
