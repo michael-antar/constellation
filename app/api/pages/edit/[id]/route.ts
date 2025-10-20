@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { ZodError } from "zod";
 import { auth } from "@/auth";
@@ -6,8 +6,8 @@ import { UserRole } from "@/types/types";
 import { updatePageSchema } from "@/lib/zod";
 
 export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   // Get user session and authorize role (only admins can directly edit pages)
   const session = await auth();
@@ -15,7 +15,8 @@ export async function PUT(
     return NextResponse.json({ message: "Forbidden" }, { status: 403 });
   }
 
-  const pageId = params.id;
+  const resolvedParams = await context.params;
+  const pageId = resolvedParams.id;
 
   try {
     const body = await request.json();
