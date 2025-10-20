@@ -37,3 +37,10 @@ export const createCategorySchema = z.object({
     message: "Must be a valid hex color code (e.g., #A4B3C1).",
   }),
 });
+
+export const updatePageSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters long"),
+  content: z.string().optional(),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  categoryId: z.uuid("Invalid category ID").nullable().optional(),
+});

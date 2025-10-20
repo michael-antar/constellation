@@ -1,4 +1,4 @@
-import { CreatePageForm } from "@/components/create-page-form";
+import { CreatePageForm } from "@/components/admin/create-page-form";
 import {
   Card,
   CardHeader,

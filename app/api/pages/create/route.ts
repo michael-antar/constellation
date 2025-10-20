@@ -16,9 +16,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-
-    // Validate the incoming data
-    const parsedData = createPageSchema.parse(body);
+    const parsedData = createPageSchema.parse(body); // Validate the incoming data
     const { title, slug, content, description, categoryId } = parsedData;
 
     const sql = neon(process.env.DATABASE_URL!);
