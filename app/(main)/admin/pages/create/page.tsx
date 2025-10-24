@@ -1,5 +1,4 @@
-// TODO: Move this into create/ dir
-import { CreatePageForm } from "@/components/admin/create-page-form";
+import { CreatePageForm } from "./create-page-form";
 import {
   Card,
   CardHeader,
