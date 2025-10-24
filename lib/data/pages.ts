@@ -1,7 +1,9 @@
 import { neon } from "@neondatabase/serverless";
 import { Page } from "@/types/types";
 
-// Server-side function to get all pages
+// Server-side functions for pages
+
+// Get all pages
 export async function getPages(): Promise<Page[]> {
   try {
     const sql = neon(process.env.DATABASE_URL!);
