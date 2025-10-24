@@ -12,8 +12,30 @@ export async function getPages(): Promise<Page[]> {
 
     return pages;
   } catch (error) {
-    console.error("Failed to fetch pages:", error);
     // TODO: Throw error to catch when called?
+    console.error("Failed to fetch pages:", error);
     return [];
+  }
+}
+
+// Fetches a single page by its ID.
+export async function getPageById(id: string): Promise<Page | null> {
+  try {
+    const sql = neon(process.env.DATABASE_URL!);
+
+    const pages = (await sql`
+      SELECT * FROM pages
+      WHERE id = ${id}
+    `) as Page[];
+
+    if (pages.length === 0) {
+      return null; // No page found with that ID
+    }
+
+    // Return the first (and only) item from the array
+    return pages[0];
+  } catch (error) {
+    console.error("Failed to fetch page by ID:", error);
+    return null; // Return null in case of a database error
   }
 }
