@@ -1,4 +1,5 @@
 import { CreatePageForm } from "./create-page-form";
+import { getCategories } from "@/lib/data/categories";
 import {
   Card,
   CardHeader,
@@ -6,7 +7,9 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 
-export default function CreatePage() {
+export default async function CreatePage() {
+  const categories = await getCategories();
+
   return (
     <div className="mx-auto w-full max-w-7xl">
       <Card>
@@ -16,7 +19,7 @@ export default function CreatePage() {
             Fill out the form below to add a new page to the knowledge base.
           </CardDescription>
         </CardHeader>
-        <CreatePageForm />
+        <CreatePageForm categories={categories} />
       </Card>
     </div>
   );

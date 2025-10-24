@@ -34,7 +34,11 @@ const generateSlug = (title: string) => {
     .replace(/[^\w-]+/g, ""); // Remove all non-word chars
 };
 
-export function CreatePageForm() {
+type CreatePageFormProps = {
+  categories: Category[];
+};
+
+export function CreatePageForm({ categories }: CreatePageFormProps) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
@@ -42,7 +46,6 @@ export function CreatePageForm() {
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
 
-  const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -50,16 +53,6 @@ export function CreatePageForm() {
   useEffect(() => {
     setSlug(generateSlug(title));
   }, [title]);
-
-  // Fetch categories when the component mounts
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const res = await fetch("/api/categories");
-      const data = await res.json();
-      setCategories(data);
-    };
-    fetchCategories();
-  }, []);
 
   // Handles opening dialog
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
