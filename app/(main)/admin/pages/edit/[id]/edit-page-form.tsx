@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Page } from "@/types/types";
+import { Page, Category } from "@/types/types";
 import { updatePageSchema } from "@/lib/zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -10,18 +10,32 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-export function EditPageForm({ page }: { page: Page }) {
+type EditPageFormProps = {
+  page: Page;
+  categories: Category[];
+};
+
+export function EditPageForm({ page, categories }: EditPageFormProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Track form state for submission
   const [formData, setFormData] = useState({
     title: page.title,
     description: page.description,
     content: page.content || "",
-    // TODO: Add category ID and a select for it
+    categoryId: page.category_id || null,
   });
 
+  // Generic handler for standard inputs
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -29,6 +43,13 @@ export function EditPageForm({ page }: { page: Page }) {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      categoryId: value,
     }));
   };
 
@@ -82,6 +103,32 @@ export function EditPageForm({ page }: { page: Page }) {
           placeholder="Page Title"
           disabled={isSubmitting}
         />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="category">Category</Label>
+        <Select
+          value={formData.categoryId || ""} // Use existing value
+          onValueChange={handleCategoryChange} // Use special handler
+          disabled={isSubmitting}
+        >
+          <SelectTrigger id="category">
+            <SelectValue placeholder="Select a category" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.length > 0 ? (
+              categories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.name}
+                </SelectItem>
+              ))
+            ) : (
+              <div className="p-2 text-sm text-muted-foreground">
+                No categories found.
+              </div>
+            )}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-2">
