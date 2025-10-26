@@ -79,14 +79,22 @@ export function CreateCategoryForm({ onSuccess }: CreateCategoryFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="color_hex">Hex Color</Label>
-        <Input
-          id="color_hex"
-          name="color_hex"
-          value={formData.color_hex}
-          onChange={handleChange}
-          placeholder="#A4B3C1"
-          disabled={isSubmitting}
-        />
+        <div className="flex items-center gap-2">
+          <span
+            className="h-10 w-10 rounded-md border border-input"
+            style={{
+              backgroundColor: formData.color_hex || "transparent",
+            }}
+          />
+          <Input
+            id="color_hex"
+            name="color_hex"
+            value={formData.color_hex}
+            onChange={handleChange}
+            placeholder="#A4B3C1"
+            disabled={isSubmitting}
+          />
+        </div>
       </div>
 
       <div className="flex justify-end">
