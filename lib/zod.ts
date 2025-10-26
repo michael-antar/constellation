@@ -30,6 +30,14 @@ export const createPageSchema = z.object({
   categoryId: z.uuid("Invalid category ID").nullable().optional(),
 });
 
+// TODO: Can I shorten this to equal createPageSchema minus slug?
+export const updatePageSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters long"),
+  content: z.string().optional(),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  categoryId: z.uuid("Invalid category ID").nullable().optional(),
+});
+
 export const createCategorySchema = z.object({
   name: z.string().trim().min(1, "Category name cannot be empty."),
   // This regex validates a 3 or 6-digit hex color code (e.g., #FFF or #AABBCC)
@@ -38,9 +46,4 @@ export const createCategorySchema = z.object({
   }),
 });
 
-export const updatePageSchema = z.object({
-  title: z.string().min(3, "Title must be at least 3 characters long"),
-  content: z.string().optional(),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  categoryId: z.uuid("Invalid category ID").nullable().optional(),
-});
+export const updateCategorySchema = createCategorySchema;
