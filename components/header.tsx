@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./mode-toggle";
 import { AuthButton } from "./auth-button";
-import { Sparkle } from "lucide-react";
+import ConstellationLogo from "./logo";
 import { UserRole } from "@/types/types";
 
 export async function Header() {
@@ -14,7 +14,7 @@ export async function Header() {
     <header className="border-b">
       <nav className="flex items-center justify-between p-4">
         <Link href="/" className="flex items-center gap-2 font-bold">
-          <Sparkle />
+          <ConstellationLogo className="w-6 h-6 text-primary" />
           Constellation
         </Link>
         <div className="flex gap-4">
