@@ -7,7 +7,7 @@ export async function DELETE(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  // Authorize user role (only admins can delete)
+  // Authorize user role (only admins can delete categories)
   const session = await auth();
   if (session?.user?.role !== UserRole.ADMIN) {
     return NextResponse.json({ message: "Forbidden" }, { status: 403 });

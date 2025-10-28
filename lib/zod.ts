@@ -47,3 +47,10 @@ export const createCategorySchema = z.object({
 });
 
 export const updateCategorySchema = createCategorySchema;
+
+export const createDefinitionSchema = z.object({
+  term: z.string().trim().min(1, "Term cannot be empty."),
+  explanation: z.string().trim().min(1, "Explanation cannot be empty."),
+});
+
+export const updateDefinitionSchema = createDefinitionSchema;
