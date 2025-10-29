@@ -1,6 +1,6 @@
 import { getDefinitionById } from "@/lib/data/definitions";
 import { notFound } from "next/navigation";
-import { EditDefinitionForm } from "./EditDefinitionForm";
+import { EditDefinitionForm } from "./edit-definition-form";
 
 type EditDefinitionPageProps = {
   params: {
