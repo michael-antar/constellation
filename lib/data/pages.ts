@@ -41,3 +41,24 @@ export async function getPageById(id: string): Promise<Page | null> {
     return null; // Return null in case of a database error
   }
 }
+
+// Fetch a single page by its slug
+export async function getPageBySlug(slug: string): Promise<Page | null> {
+  try {
+    const sql = neon(process.env.DATABASE_URL!);
+
+    const pages = (await sql`
+      SELECT * FROM pages
+      WHERE slug = ${slug}
+    `) as Page[];
+
+    if (pages.length === 0) {
+      return null; // No page found with that slug
+    }
+
+    return pages[0];
+  } catch (error) {
+    console.error("Failed to fetch page by slug:", error);
+    return null; // Return null in case of a database error
+  }
+}
