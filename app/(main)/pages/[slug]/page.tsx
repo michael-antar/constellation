@@ -28,17 +28,22 @@ const components = {
   p: (props: React.ComponentProps<"p">) => (
     <p className="my-4 text-base text-p leading-7" {...props} />
   ),
-  ul: (props: React.ComponentProps<"ul">) => (
-    <ul className="list-disc list-inside my-4 pl-4" {...props} />
+  strong: (props: React.ComponentProps<"strong">) => (
+    <strong className="font-bold text-bold" {...props} />
   ),
-  li: (props: React.ComponentProps<"li">) => <li className="my-2" {...props} />,
+  em: (props: React.ComponentProps<"em">) => (
+    <em className="italic text-italic" {...props} />
+  ),
+  // --- Link Styles ---
   a: (props: React.ComponentProps<"a">) => {
     const href = props.href || "";
     if (href.startsWith("/")) {
       return (
         <Link
           href={href}
-          className="text-teal-500 hover:underline"
+          className="font-medium bg-gradient-to-r
+          from-galaxy-start to-galaxy-end bg-clip-text
+          text-transparent hover:brightness-110"
           {...props}
         />
       );
@@ -46,13 +51,17 @@ const components = {
     return (
       <a
         href={href}
-        className="text-teal-500 hover:underline"
+        className="text-secondary-foreground underline decoration-dotted"
         target="_blank"
         rel="noopener noreferrer"
         {...props}
       />
     );
   },
+  ul: (props: React.ComponentProps<"ul">) => (
+    <ul className="list-disc list-inside my-4 pl-4" {...props} />
+  ),
+  li: (props: React.ComponentProps<"li">) => <li className="my-2" {...props} />,
 };
 
 type PageProps = {

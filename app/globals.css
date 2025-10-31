@@ -50,8 +50,10 @@
 
   /* Basic Text */
   --p: oklch(22% 0.03 260);
-  --highlight-bold: rgb(234 88 12);
-  --highlight-italic: rgb(101 163 13);
+  --bold: oklch(74.761% 0.1719 59.669);
+  --italic: oklch(68.042% 0.21606 140.338);
+
+  /* Custom Colors */
   --galaxy-start: rgb(96 165 250);
   --galaxy-end: rgb(192 132 252);
 }
@@ -99,8 +101,9 @@
   --h6: oklch(65% 0.02 265);
 
   /* Basic Text */
-  --highlight-bold: rgb(249 115 22);
-  --highlight-italic: rgb(132 204 22);
+  --p: oklch(84.146% 0.03447 259.455);
+  --bold: oklch(74.761% 0.1719 59.669);
+  --italic: oklch(80.097% 0.25245 140.156);
 }
 
 @theme inline {
@@ -157,8 +160,10 @@
 
   /* Text */
   --color-p: var(--p);
-  --color-highlight-bold: var(--highlight-bold);
-  --color-highlight-italic: var(--highlight-italic);
+  --color-bold: var(--bold);
+  --color-italic: var(--italic);
+
+  /* Custom Colors */
   --color-galaxy-start: var(--galaxy-start);
   --color-galaxy-end: var(--galaxy-end);
 }
