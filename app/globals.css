@@ -37,6 +37,19 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
+  
+
+  /* --- Markdown Styles --- */
+  /* Headers */
+  --h1: oklch(22% 0.03 260);
+  --h2: oklch(35% 0.12 255);
+  --h3: oklch(45% 0.16 260);
+  --h4: oklch(40% 0.14 285);
+  --h5: oklch(50% 0.08 275);
+  --h6: oklch(55% 0.02 265);
+
+  /* Basic Text */
+  --p: oklch(22% 0.03 260);
   --highlight-bold: rgb(234 88 12);
   --highlight-italic: rgb(101 163 13);
   --galaxy-start: rgb(96 165 250);
@@ -76,6 +89,16 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 
+  /* --- Markdown Styles --- */
+  /* Headers */
+  --h1: oklch(98.5% 0.005 260);
+  --h2: oklch(90% 0.06 255);
+  --h3: oklch(80% 0.13 260);
+  --h4: oklch(75% 0.16 285);
+  --h5: oklch(70% 0.09 275);
+  --h6: oklch(65% 0.02 265);
+
+  /* Basic Text */
   --highlight-bold: rgb(249 115 22);
   --highlight-italic: rgb(132 204 22);
 }
@@ -121,6 +144,19 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
+  
+
+  /* --- Markdown Styles --- */
+  /* Headers */
+  --color-h1: var(--h1);
+  --color-h2: var(--h2);
+  --color-h3: var(--h3);
+  --color-h4: var(--h4);
+  --color-h5: var(--h5);
+  --color-h6: var(--h6);
+
+  /* Text */
+  --color-p: var(--p);
   --color-highlight-bold: var(--highlight-bold);
   --color-highlight-italic: var(--highlight-italic);
   --color-galaxy-start: var(--galaxy-start);
