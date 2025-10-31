@@ -6,7 +6,7 @@ import React from "react";
 
 const components = {
   h1: (props: React.ComponentProps<"h1">) => (
-    <h1 className="text-3xl font-bold text-blue-600" {...props} />
+    <h1 className="text-3xl font-bold text-white" {...props} />
   ),
   h2: (props: React.ComponentProps<"h2">) => (
     <h2
