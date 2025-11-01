@@ -37,6 +37,21 @@ export type Definition = {
   explanation: string; // The content of the definition pop-up in MDX: TEXT NOT NULL
 };
 
+// A node in the constellation graph (represents a Page)
+export type GraphNode = {
+  id: string; // The page ID
+  label: string; // The page Title
+  slug: string; // The page slug (for navigation)
+  color?: string | null; // The category color (e.g., "#A4B3C1")
+};
+
+// An edge in the constellation graph (represents a Link)
+export type GraphEdge = {
+  id: string; // A unique ID for the link (e.g., "sourceId-targetId")
+  source: string; // The source_page_id
+  target: string; // The target_page_id
+};
+
 export enum UserRole {
   USER = "USER",
   ADMIN = "ADMIN",
