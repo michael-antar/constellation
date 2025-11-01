@@ -1,8 +1,13 @@
-import { getPageBySlug } from "@/lib/data/pages";
+import {
+  getPageBySlug,
+  getOutgoingLinks,
+  getIncomingLinks,
+} from "@/lib/data/pages";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import React from "react";
+import { PageLink } from "@/types/types";
 
 const components = {
   // --- Headers ---
@@ -78,6 +83,12 @@ export default async function PageBySlug({ params }: PageProps) {
     notFound();
   }
 
+  // Fetch links in parallel
+  const [outgoingLinks, incomingLinks] = await Promise.all([
+    getOutgoingLinks(page.id),
+    getIncomingLinks(page.id),
+  ]);
+
   return (
     <article className="max-w-3xl mx-auto py-12">
       <h1 className="text-4xl font-bold">{page.title}</h1>
@@ -85,7 +96,46 @@ export default async function PageBySlug({ params }: PageProps) {
 
       <hr className="my-8" />
 
+      {/* Main Page Content */}
       <MDXRemote source={page.content} components={components} />
+
+      {/* Section for Incoming/Outgoing Links */}
+      <hr className="my-12 border-dashed" />
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
+        <PageLinkList title="Links To" links={outgoingLinks} />
+        <PageLinkList title="Linked From" links={incomingLinks} />
+      </section>
     </article>
+  );
+}
+
+// Helper component to render a page-link list
+function PageLinkList({ title, links }: { title: string; links: PageLink[] }) {
+  return (
+    <div>
+      <h2 className="text-2xl font-semibold text-h2 dark:text-h2-dark mb-4">
+        {title}
+      </h2>
+      {links.length > 0 ? (
+        <ul className="space-y-2">
+          {links.map((link) => (
+            <li key={link.slug}>
+              <Link
+                href={`/pages/${link.slug}`}
+                className="
+                  font-medium bg-gradient-to-r
+                  from-galaxy-start to-galaxy-end bg-clip-text
+                  text-transparent hover:brightness-110
+                "
+              >
+                {link.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="italic text-muted-foreground">None</p>
+      )}
+    </div>
   );
 }
