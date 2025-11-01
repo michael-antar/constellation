@@ -14,7 +14,7 @@ export async function Header() {
     <header className="border-b">
       <nav className="flex items-center justify-between p-4">
         <Link href="/" className="flex items-center gap-2 font-bold">
-          <ConstellationLogo className="w-6 h-6 text-primary" />
+          <ConstellationLogo className="w-6 h-6" />
           Constellation
         </Link>
         <div className="flex gap-4">

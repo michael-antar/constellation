@@ -11,7 +11,7 @@ type EditDefinitionPageProps = {
 export default async function EditDefinitionPage({
   params,
 }: EditDefinitionPageProps) {
-  const id = params.id;
+  const { id } = await params;
 
   const definition = await getDefinitionById(id);
 
