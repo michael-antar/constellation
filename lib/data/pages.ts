@@ -63,7 +63,7 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
   }
 }
 
-// Fetches all pages that the given page links TO
+// Fetches all pages that the given page links to
 export async function getOutgoingLinks(pageId: string): Promise<PageLink[]> {
   try {
     const sql = neon(process.env.DATABASE_URL!);
@@ -86,6 +86,33 @@ export async function getOutgoingLinks(pageId: string): Promise<PageLink[]> {
     return links;
   } catch (error) {
     console.error("Failed to fetch outgoing links:", error);
+    return []; // Return an empty array on error
+  }
+}
+
+// Fetches all pages that link to the given page
+export async function getIncomingLinks(pageId: string): Promise<PageLink[]> {
+  try {
+    const sql = neon(process.env.DATABASE_URL!);
+
+    // Get source page details
+    const links = (await sql`
+      SELECT 
+        p.title, 
+        p.slug
+      FROM 
+        links l
+      JOIN 
+        pages p ON l.source_page_id = p.id
+      WHERE 
+        l.target_page_id = ${pageId}
+      ORDER BY
+        p.title ASC
+    `) as PageLink[];
+
+    return links;
+  } catch (error) {
+    console.error("Failed to fetch incoming links:", error);
     return []; // Return an empty array on error
   }
 }
