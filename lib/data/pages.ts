@@ -1,5 +1,5 @@
 import { neon } from "@neondatabase/serverless";
-import { Page } from "@/types/types";
+import { Page, PageLink } from "@/types/types";
 
 // Server-side functions for pages
 
@@ -60,5 +60,32 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
   } catch (error) {
     console.error("Failed to fetch page by slug:", error);
     return null; // Return null in case of a database error
+  }
+}
+
+// Fetches all pages that the given page links TO
+export async function getOutgoingLinks(pageId: string): Promise<PageLink[]> {
+  try {
+    const sql = neon(process.env.DATABASE_URL!);
+
+    // Get target page details
+    const links = (await sql`
+      SELECT 
+        p.title, 
+        p.slug
+      FROM 
+        links l
+      JOIN 
+        pages p ON l.target_page_id = p.id
+      WHERE 
+        l.source_page_id = ${pageId}
+      ORDER BY
+        p.title ASC
+    `) as PageLink[];
+
+    return links;
+  } catch (error) {
+    console.error("Failed to fetch outgoing links:", error);
+    return []; // Return an empty array on error
   }
 }

@@ -13,6 +13,12 @@ export type Page = {
   category_id: string | null; // The category the page belongs to: UUID FOREIGN KEY REFERENCES categories.id ON DELETE RESTRICT
 };
 
+// A link to another page, including its title and slug
+export type PageLink = {
+  title: string;
+  slug: string;
+};
+
 /* 
 Defines different categories a page can belong to. Used to classify pages for coloring nodes in the constellation and for filtering
 */
