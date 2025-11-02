@@ -11,36 +11,30 @@ function CustomNode({
   const nodeColor = data.color || "#9ca3af"; // Default to gray if no color
 
   return (
+    // Circular Node
     <div
-      className="px-4 py-2 shadow-md rounded-md bg-background border-2"
-      // Use the category color for the border
-      style={{ borderColor: nodeColor }}
+      className="relative w-10 h-10 rounded-full flex items-center justify-center shadow-md border border-gray-400"
+      style={{ backgroundColor: nodeColor }}
     >
-      {/* The "handle" - the dot where edges connect to */}
-      <Handle
-        type="target"
-        position={Position.Top}
-        className="w-16 !bg-transparent"
-      />
-
-      {/* The node's content */}
+      {/* Title */}
       <div
-        className="font-bold"
-        // Use the category color for the text
-        style={{ color: nodeColor }}
+        className="absolute text-center font-semibold px-2 py-0.5 rounded-sm whitespace-nowrap"
+        style={{
+          color: nodeColor,
+          backgroundColor: nodeColor + "20",
+          bottom: "100%", // Positioned above the 100% height of the circle
+          left: "50%",
+          transform: "translateX(-50%)", // Horizontally centers the text
+          marginBottom: "4px", // Small gap between circle
+        }}
       >
         {data.label}
       </div>
 
-      {/* This handle is where edges connect from */}
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        className="w-16 !bg-transparent"
-      />
+      <Handle type="target" position={Position.Left} className="invisible" />
+      <Handle type="source" position={Position.Right} className="invisible" />
     </div>
   );
 }
 
-// 'memo' prevents re-rendering a node if its data hasn't changed
-export default memo(CustomNode);
+export default memo(CustomNode); // Prevent re-rendering a node if its data hasn't changed
