@@ -83,9 +83,9 @@ export function GraphClient({
       onNodeClick={onNodeClick}
       nodeTypes={nodeTypes}
       fitView // Zoom to fit all nodes on load
-      className="bg-background"
+      className="text-slate-600"
     >
-      <Controls />
+      <Controls showInteractive={false} />
       <Background />
     </ReactFlow>
   );
