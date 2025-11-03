@@ -6,15 +6,24 @@ import { memo } from "react";
 function CustomNode({
   data,
 }: {
-  data: { label: string; color: string | null };
+  data: { label: string; color: string | null; incomingLinkCount: number };
 }) {
   const nodeColor = data.color || "#9ca3af"; // Default to gray if no color
+
+  // Calculate dynamic size based on incoming links
+  const baseSize = 15;
+  const linkBonus = data.incomingLinkCount * 4;
+  const size = baseSize + linkBonus;
 
   return (
     // Circular Node
     <div
-      className="relative w-10 h-10 rounded-full flex items-center justify-center shadow-md border border-gray-400"
-      style={{ backgroundColor: nodeColor }}
+      className="relative rounded-full flex items-center justify-center shadow-md border border-gray-400"
+      style={{
+        backgroundColor: nodeColor,
+        width: `${size}px`,
+        height: `${size}px`,
+      }}
     >
       {/* Title */}
       <div

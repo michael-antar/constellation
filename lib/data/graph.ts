@@ -41,12 +41,20 @@ export async function getGraphData(): Promise<{
     const pages = pagesResult as PageData[];
     const links = linksResult as LinkData[];
 
+    // Store incoming links count for each page
+    const linkCounts = new Map<string, number>();
+    for (const link of links) {
+      const count = linkCounts.get(link.target_page_id) || 0;
+      linkCounts.set(link.target_page_id, count + 1);
+    }
+
     // Format the pages as GraphNodes
     const nodes: GraphNode[] = pages.map((page) => ({
       id: page.id,
       label: page.title,
       slug: page.slug,
       color: page.color_hex,
+      incomingLinkCount: linkCounts.get(page.id) || 0,
     }));
 
     // Format the links as GraphEdges

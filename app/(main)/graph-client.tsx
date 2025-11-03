@@ -52,6 +52,7 @@ export function GraphClient({
           label: node.label,
           slug: node.slug,
           color: node.color,
+          incomingLinkCount: node.incomingLinkCount,
         },
       };
     });

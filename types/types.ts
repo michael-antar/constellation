@@ -43,6 +43,7 @@ export type GraphNode = {
   label: string; // The page Title
   slug: string; // The page slug (for navigation)
   color?: string | null; // The category color (e.g., "#A4B3C1")
+  incomingLinkCount: number; // Number of links that point to this page, used to generate circle size
 };
 
 // An edge in the constellation graph (represents a Link)
