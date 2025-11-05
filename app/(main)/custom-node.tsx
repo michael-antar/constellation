@@ -18,6 +18,7 @@ function CustomNode({
   return (
     // Circular Node
     <div
+      title={data.label}
       className="relative rounded-full flex items-center justify-center shadow-md border border-gray-400"
       style={{
         backgroundColor: nodeColor,
