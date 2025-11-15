@@ -1,7 +1,7 @@
 "use client";
 
-import { Handle, Position } from "@xyflow/react";
-import { memo } from "react";
+import { Handle, Position, useViewport } from "@xyflow/react";
+import { memo, useState } from "react";
 
 function CustomNode({
   data,
@@ -10,10 +10,16 @@ function CustomNode({
 }) {
   const nodeColor = data.color || "#9ca3af"; // Default to gray if no color
 
+  const { zoom } = useViewport(); // Get current zoom level
+
+  const [isHovered, setIsHovered] = useState(false);
+
   // Calculate dynamic size based on incoming links
   const baseSize = 15;
   const linkBonus = data.incomingLinkCount * 4;
   const size = baseSize + linkBonus;
+
+  const isLabelVisible = zoom > 0.8 || isHovered; // Decide if label should be visible
 
   return (
     // Circular Node
@@ -25,21 +31,25 @@ function CustomNode({
         width: `${size}px`,
         height: `${size}px`,
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Title */}
-      <div
-        className="absolute text-center font-semibold px-2 py-0.5 rounded-sm whitespace-nowrap"
-        style={{
-          color: nodeColor,
-          backgroundColor: nodeColor + "20",
-          bottom: "100%", // Positioned above the 100% height of the circle
-          left: "50%",
-          transform: "translateX(-50%)", // Horizontally centers the text
-          marginBottom: "4px", // Small gap between circle
-        }}
-      >
-        {data.label}
-      </div>
+      {isLabelVisible && (
+        <div
+          className="absolute text-center font-semibold px-2 py-0.5 rounded-sm whitespace-nowrap"
+          style={{
+            color: nodeColor,
+            backgroundColor: nodeColor + "20",
+            bottom: "100%", // Positioned above the 100% height of the circle
+            left: "50%",
+            transform: "translateX(-50%)", // Horizontally centers the text
+            marginBottom: "4px", // Small gap between circle
+          }}
+        >
+          {data.label}
+        </div>
+      )}
 
       <Handle type="target" position={Position.Left} className="invisible" />
       <Handle type="source" position={Position.Right} className="invisible" />
