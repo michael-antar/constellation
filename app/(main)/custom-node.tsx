@@ -30,6 +30,7 @@ function CustomNode({
         backgroundColor: nodeColor,
         width: `${size}px`,
         height: `${size}px`,
+        cursor: "pointer",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
