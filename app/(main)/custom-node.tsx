@@ -6,7 +6,12 @@ import { memo, useState } from "react";
 function CustomNode({
   data,
 }: {
-  data: { label: string; color: string | null; incomingLinkCount: number };
+  data: {
+    label: string;
+    color: string | null;
+    incomingLinkCount: number;
+    isDimmed?: boolean; // TODO: Is the optional necessary?
+  };
 }) {
   const nodeColor = data.color || "#9ca3af"; // Default to gray if no color
 
@@ -25,12 +30,13 @@ function CustomNode({
     // Circular Node
     <div
       title={data.label}
-      className="relative rounded-full flex items-center justify-center shadow-md border border-gray-400"
+      className="relative rounded-full flex items-center justify-center shadow-md border border-gray-400 transition-opacity duration-300"
       style={{
         backgroundColor: nodeColor,
         width: `${size}px`,
         height: `${size}px`,
         cursor: "pointer",
+        opacity: data.isDimmed ? 0.1 : 1,
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

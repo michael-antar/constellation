@@ -53,6 +53,7 @@ export function GraphClient({
           slug: node.slug,
           color: node.color,
           incomingLinkCount: node.incomingLinkCount,
+          isDimmed: false,
         },
       };
     });
@@ -75,6 +76,65 @@ export function GraphClient({
     [router]
   );
 
+  const onNodeMouseEnter = useCallback(
+    // Highlight node logic
+    (_: React.MouseEvent, node: Node) => {
+      // Find all edges connected to hovered node
+      const connectedEdges = edges.filter(
+        (e) => e.source === node.id || e.target === node.id
+      );
+      const connectedEdgeIds = new Set(connectedEdges.map((e) => e.id));
+
+      // Find all nodes that are connected
+      const connectedNodeIds = new Set<string>();
+      connectedNodeIds.add(node.id); // Add the hovered node itself
+      connectedEdges.forEach((e) => {
+        connectedNodeIds.add(e.source);
+        connectedNodeIds.add(e.target);
+      });
+
+      // Update Nodes: Dim if not in the connected set
+      setNodes((nds) =>
+        nds.map((n) => ({
+          ...n,
+          data: {
+            ...n.data,
+            isDimmed: !connectedNodeIds.has(n.id),
+          },
+        }))
+      );
+
+      // Update Edges: Dim if not in the connected edge set
+      setEdges((eds) =>
+        eds.map((e) => ({
+          ...e,
+          style: {
+            opacity: connectedEdgeIds.has(e.id) ? 1 : 0.1,
+            stroke: connectedEdgeIds.has(e.id) ? "#888" : "#e5e7eb",
+          },
+        }))
+      );
+    },
+    [edges, setNodes, setEdges]
+  );
+
+  const onNodeMouseLeave = useCallback(() => {
+    // Reset everything to visible
+    setNodes((nds) =>
+      nds.map((n) => ({
+        ...n,
+        data: { ...n.data, isDimmed: false },
+      }))
+    );
+
+    setEdges((eds) =>
+      eds.map((e) => ({
+        ...e,
+        style: { ...e.style, opacity: 1, stroke: "#888" },
+      }))
+    );
+  }, [setNodes, setEdges]);
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -82,6 +142,8 @@ export function GraphClient({
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onNodeClick={onNodeClick}
+      onNodeMouseEnter={onNodeMouseEnter}
+      onNodeMouseLeave={onNodeMouseLeave}
       nodeTypes={nodeTypes}
       fitView // Zoom to fit all nodes on load
       className="text-slate-600"
