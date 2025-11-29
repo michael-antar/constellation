@@ -12,6 +12,7 @@ import {
   Edge,
   useNodesInitialized,
   ReactFlowProvider,
+  useReactFlow,
 } from "@xyflow/react";
 import * as d3 from "d3-force";
 import {
@@ -41,6 +42,10 @@ export function GraphClientInternal({
   const router = useRouter();
   const nodesInitialized = useNodesInitialized(); // Check if nodes are ready
 
+  const { fitView } = useReactFlow();
+  const hasCenteredRef = useRef(false);
+  const defaultViewport = { x: 750, y: 300, zoom: 0 };
+
   // React Flow state hooks
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -56,7 +61,11 @@ export function GraphClientInternal({
     const initialNodes: Node[] = propNodes.map((node) => ({
       id: node.id,
       type: "custom",
-      position: { x: 0, y: 0 }, // Start with (0,0), let physics engine spread them out
+      position: { x: 0, y: 0 },
+      // position: {
+      //   x: (Math.random() - 0.5) * 500, // Random spread between -250 and 250
+      //   y: (Math.random() - 0.5) * 500,
+      // },
       data: {
         label: node.label,
         slug: node.slug,
@@ -108,7 +117,7 @@ export function GraphClientInternal({
       // Force 3: Pull everything towards center
       .force("center", forceCenter(0, 0))
       // Force 4: Prevent node overlap
-      .force("collide", d3.forceCollide().radius(50)); // Approximate node radius
+      .force("collide", d3.forceCollide().radius(20)); // Approximate node radius
 
     // On every "tick" of the simulation, update React Flow node positions
     simulation.on("tick", () => {
@@ -123,6 +132,14 @@ export function GraphClientInternal({
           };
         })
       );
+    });
+
+    // When the simulation settles (stops moving), zoom to fit.
+    simulation.on("end", () => {
+      if (!hasCenteredRef.current) {
+        fitView({ duration: 1000, padding: 0.1 }); // Smooth 1-second zoom
+        hasCenteredRef.current = true;
+      }
     });
 
     simulationRef.current = simulation;
@@ -251,7 +268,8 @@ export function GraphClientInternal({
       onNodeDrag={onNodeDrag}
       onNodeDragStop={onNodeDragStop}
       nodeTypes={nodeTypes}
-      fitView // Zoom to fit all nodes on load
+      // fitView // Zoom to fit all nodes on load
+      defaultViewport={defaultViewport}
       className="text-slate-600"
     >
       <Controls showInteractive={false} />
