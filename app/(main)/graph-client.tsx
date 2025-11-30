@@ -13,6 +13,7 @@ import {
   useNodesInitialized,
   ReactFlowProvider,
   useReactFlow,
+  Panel,
 } from "@xyflow/react";
 import * as d3 from "d3-force";
 import {
@@ -24,6 +25,7 @@ import {
 } from "d3-force";
 import "@xyflow/react/dist/style.css";
 import CustomNode from "./custom-node";
+import { GraphSearch } from "./graph-search";
 import { GraphNode, GraphEdge } from "@/types/types";
 
 const nodeTypes = {
@@ -287,6 +289,10 @@ export function GraphClientInternal({
     >
       <Controls showInteractive={false} />
       <Background />
+
+      <Panel position="top-right">
+        <GraphSearch nodes={nodes} />
+      </Panel>
     </ReactFlow>
   );
 }
