@@ -1,13 +1,10 @@
-import {
-  getPageBySlug,
-  getOutgoingLinks,
-  getIncomingLinks,
-} from "@/lib/data/pages";
+import { getPageBySlug } from "@/lib/data/pages";
+import { getPageNeighborhood } from "@/lib/data/graph";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import React from "react";
-import { PageLink } from "@/types/types";
+import { GraphClient } from "@/components/graph/graph-client";
 
 const components = {
   // --- Headers ---
@@ -83,11 +80,8 @@ export default async function PageBySlug({ params }: PageProps) {
     notFound();
   }
 
-  // Fetch links in parallel
-  const [outgoingLinks, incomingLinks] = await Promise.all([
-    getOutgoingLinks(page.id),
-    getIncomingLinks(page.id),
-  ]);
+  // Fetch data for mini graph
+  const { nodes, edges } = await getPageNeighborhood(slug);
 
   return (
     <article className="max-w-3xl mx-auto py-12">
@@ -99,43 +93,31 @@ export default async function PageBySlug({ params }: PageProps) {
       {/* Main Page Content */}
       <MDXRemote source={page.content} components={components} />
 
-      {/* Section for Incoming/Outgoing Links */}
+      {/* Mini Graph */}
       <hr className="my-12 border-dashed" />
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
-        <PageLinkList title="Links To" links={outgoingLinks} />
-        <PageLinkList title="Linked From" links={incomingLinks} />
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-semibold text-h2 mb-4">Connections</h2>
+
+        {nodes.length > 1 ? (
+          <div className="h-[500px] border rounded-lg bg-background overflow-hidden relative">
+            <GraphClient
+              nodes={nodes}
+              edges={edges}
+              enableSearch={false} // Turn off search for mini-graph
+              className="bg-slate-50 dark:bg-slate-900/50"
+            />
+
+            <div className="absolute bottom-2 right-2 text-xs text-muted-foreground bg-background/80 px-2 py-1 rounded">
+              {nodes.length - 1} connected pages
+            </div>
+          </div>
+        ) : (
+          <p className="text-muted-foreground italic">
+            This page has no connections yet.
+          </p>
+        )}
       </section>
     </article>
-  );
-}
-
-// Helper component to render a page-link list
-function PageLinkList({ title, links }: { title: string; links: PageLink[] }) {
-  return (
-    <div>
-      <h2 className="text-2xl font-semibold text-h2 dark:text-h2-dark mb-4">
-        {title}
-      </h2>
-      {links.length > 0 ? (
-        <ul className="space-y-2">
-          {links.map((link) => (
-            <li key={link.slug}>
-              <Link
-                href={`/pages/${link.slug}`}
-                className="
-                  font-medium bg-gradient-to-r
-                  from-galaxy-start to-galaxy-end bg-clip-text
-                  text-transparent hover:brightness-110
-                "
-              >
-                {link.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="italic text-muted-foreground">None</p>
-      )}
-    </div>
   );
 }

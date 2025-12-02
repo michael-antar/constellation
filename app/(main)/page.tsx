@@ -1,5 +1,5 @@
 import { getGraphData } from "@/lib/data/graph";
-import { GraphClient } from "./graph-client";
+import { GraphClient } from "@/components/graph/graph-client";
 
 export default async function HomePage() {
   // Fetch the graph data on the server

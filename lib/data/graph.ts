@@ -70,3 +70,107 @@ export async function getGraphData(): Promise<{
     return { nodes: [], edges: [] };
   }
 }
+
+// Get the local "neighborhood" for a specific page
+export async function getPageNeighborhood(slug: string): Promise<{
+  nodes: GraphNode[];
+  edges: GraphEdge[];
+}> {
+  try {
+    const sql = neon(process.env.DATABASE_URL!);
+
+    // Get the center page
+    const centerPageResult = await sql`
+      SELECT id, title, slug, category_id FROM pages WHERE slug = ${slug}
+    `;
+
+    if (centerPageResult.length === 0) return { nodes: [], edges: [] };
+    const centerPage = centerPageResult[0];
+
+    // Get neighbors (incoming + outgoing) with their cateogry color
+    const neighborsResult = await sql`
+      WITH RECURSIVE 
+      center AS (SELECT id FROM pages WHERE id = ${centerPage.id}),
+      
+      outgoing AS (
+        SELECT p.id, p.title, p.slug, c.color_hex, 'outgoing' as type
+        FROM links l
+        JOIN pages p ON l.target_page_id = p.id
+        LEFT JOIN categories c ON p.category_id = c.id
+        WHERE l.source_page_id = (SELECT id FROM center)
+      ),
+      
+      incoming AS (
+        SELECT p.id, p.title, p.slug, c.color_hex, 'incoming' as type
+        FROM links l
+        JOIN pages p ON l.source_page_id = p.id
+        LEFT JOIN categories c ON p.category_id = c.id
+        WHERE l.target_page_id = (SELECT id FROM center)
+      )
+
+      SELECT * FROM outgoing
+      UNION
+      SELECT * FROM incoming
+    `;
+
+    // Get center page color
+    const centerCategoryResult = await sql`
+        SELECT color_hex FROM categories WHERE id = ${centerPage.category_id}
+    `;
+    const centerColor = centerCategoryResult[0]?.color_hex || null;
+
+    // --- Construct nodes ---
+    const nodes: GraphNode[] = [];
+
+    // Add center node
+    nodes.push({
+      id: centerPage.id,
+      label: centerPage.title,
+      slug: centerPage.slug,
+      color: centerColor,
+      incomingLinkCount: neighborsResult.length + 5, // Make center node biggest
+    });
+
+    // Add neighbors
+    // Use a map to ensure uniqueness (in case a page is both incoming and outgoing)
+    const neighborMap = new Map();
+
+    neighborsResult.forEach((n) => {
+      if (!neighborMap.has(n.id)) {
+        neighborMap.set(n.id, {
+          id: n.id,
+          label: n.title,
+          slug: n.slug,
+          color: n.color_hex,
+          incomingLinkCount: 1, // Keep neighbors smaller
+        });
+      }
+    });
+
+    nodes.push(...(Array.from(neighborMap.values()) as GraphNode[]));
+
+    // --- Construct Edges ---
+    const edges: GraphEdge[] = [];
+
+    neighborsResult.forEach((n) => {
+      if (n.type === "outgoing") {
+        edges.push({
+          id: `${centerPage.id}-${n.id}`,
+          source: centerPage.id,
+          target: n.id,
+        });
+      } else {
+        edges.push({
+          id: `${n.id}-${centerPage.id}`,
+          source: n.id,
+          target: centerPage.id,
+        });
+      }
+    });
+
+    return { nodes, edges };
+  } catch (error) {
+    console.error("Failed to fetch neighborhood:", error);
+    return { nodes: [], edges: [] };
+  }
+}

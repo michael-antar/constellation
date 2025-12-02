@@ -35,11 +35,15 @@ const nodeTypes = {
 type GraphClientProps = {
   nodes: GraphNode[];
   edges: GraphEdge[];
+  enableSearch?: boolean;
+  className?: string;
 };
 
 export function GraphClientInternal({
   nodes: propNodes,
   edges: propEdges,
+  enableSearch = true,
+  className,
 }: GraphClientProps) {
   const router = useRouter();
   const nodesInitialized = useNodesInitialized(); // Check if nodes are ready
@@ -285,14 +289,16 @@ export function GraphClientInternal({
       onNodeDrag={onNodeDrag}
       onNodeDragStop={onNodeDragStop}
       nodeTypes={nodeTypes}
-      className="text-slate-600"
+      className={`text-slate-600 ${className || ""}`}
     >
       <Controls showInteractive={false} />
       <Background />
 
-      <Panel position="top-right">
-        <GraphSearch nodes={nodes} />
-      </Panel>
+      {enableSearch && (
+        <Panel position="top-right">
+          <GraphSearch nodes={nodes} />
+        </Panel>
+      )}
     </ReactFlow>
   );
 }
