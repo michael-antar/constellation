@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useReactFlow, Node } from "@xyflow/react";
 
 import {
@@ -19,7 +19,7 @@ interface GraphSearchProps {
 }
 
 export function GraphSearch({ nodes }: GraphSearchProps) {
-  const { setCenter, zoomTo } = useReactFlow();
+  const { setCenter } = useReactFlow();
   const [open, setOpen] = useState(false);
 
   // Handle selecting a node from the list

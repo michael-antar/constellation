@@ -43,6 +43,7 @@ export type GraphNode = {
   label: string; // The page Title
   slug: string; // The page slug (for navigation)
   color?: string | null; // The category color (e.g., "#A4B3C1")
+  category?: string | null; // The category title (e.g., "Algorithms")
   incomingLinkCount: number; // Number of links that point to this page, used to generate circle size
 };
 

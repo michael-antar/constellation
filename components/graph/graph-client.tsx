@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useRef } from "react";
+import * as React from "react";
 import { useRouter } from "next/navigation";
 import {
   ReactFlow,
@@ -26,6 +26,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import CustomNode from "./custom-node";
 import { GraphSearch } from "./graph-search";
+import { GraphFilter } from "./graph-filter";
 import { GraphNode, GraphEdge } from "@/types/types";
 
 const nodeTypes = {
@@ -55,14 +56,65 @@ export function GraphClientInternal({
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   // Keep track of the simulation instance
-  const simulationRef = useRef<d3.Simulation<
+  const simulationRef = React.useRef<d3.Simulation<
     SimulationNodeDatum,
     undefined
   > | null>(null);
 
-  // Initial Data Setup
-  useEffect(() => {
-    const initialNodes: Node[] = propNodes.map((node) => ({
+  // --- Category Filters ---
+  // Derive unique categories from props
+  const uniqueCategories = React.useMemo(() => {
+    const map = new Map<string, string>();
+    propNodes.forEach((node) => {
+      const catName = node.category || "Uncategorized";
+      const catColor = node.color || "#9ca3af";
+      if (!map.has(catName)) {
+        map.set(catName, catColor);
+      }
+    });
+    return Array.from(map.entries()).map(([name, color]) => ({ name, color }));
+  }, [propNodes]);
+
+  // State for active filters (Default to all selected)
+  const [selectedCategories, setSelectedCategories] = React.useState<string[]>(
+    []
+  );
+
+  // Initialize selectedCategories once uniqueCategories is calculated
+  React.useEffect(() => {
+    if (uniqueCategories.length > 0 && selectedCategories.length === 0) {
+      setSelectedCategories(uniqueCategories.map((c) => c.name));
+    }
+  }, [uniqueCategories]);
+
+  const toggleCategory = (catName: string) => {
+    setSelectedCategories(
+      (prev) =>
+        prev.includes(catName)
+          ? prev.filter((c) => c !== catName) // Remove
+          : [...prev, catName] // Add
+    );
+  };
+
+  // - Filter Nodes and Edges logic -
+  const filteredNodes = React.useMemo(() => {
+    return propNodes.filter((n) => {
+      const cat = n.category || "Uncategorized";
+      return selectedCategories.includes(cat);
+    });
+  }, [propNodes, selectedCategories]);
+
+  const filteredEdges = React.useMemo(() => {
+    // Only keep edges where BOTH source and target are visible
+    const visibleNodeIds = new Set(filteredNodes.map((n) => n.id));
+    return propEdges.filter(
+      (e) => visibleNodeIds.has(e.source) && visibleNodeIds.has(e.target)
+    );
+  }, [propEdges, filteredNodes]);
+
+  // --- Initial Data Setup ---
+  React.useEffect(() => {
+    const initialNodes: Node[] = filteredNodes.map((node) => ({
       id: node.id,
       type: "custom",
       position: { x: 0, y: 0 },
@@ -79,7 +131,7 @@ export function GraphClientInternal({
       },
     }));
 
-    const initialEdges: Edge[] = propEdges.map((edge) => ({
+    const initialEdges: Edge[] = filteredEdges.map((edge) => ({
       ...edge,
       animated: true,
       style: { stroke: "#888", cursor: "grab" },
@@ -87,10 +139,10 @@ export function GraphClientInternal({
 
     setNodes(initialNodes);
     setEdges(initialEdges);
-  }, [propNodes, propEdges, setNodes, setEdges]);
+  }, [filteredNodes, filteredEdges, setNodes, setEdges]);
 
   // Physics Engine
-  useEffect(() => {
+  React.useEffect(() => {
     // Only run the simulation if nodes exist and React Flow has initialized them
     if (!nodesInitialized || nodes.length === 0) return;
 
@@ -175,7 +227,7 @@ export function GraphClientInternal({
   // --- Interation Handlers ---
 
   // Redirect to node's page
-  const onNodeClick = useCallback(
+  const onNodeClick = React.useCallback(
     (event: React.MouseEvent, node: Node) => {
       router.push(`/pages/${node.data.slug}`);
     },
@@ -183,42 +235,48 @@ export function GraphClientInternal({
   );
 
   // Wake up simulation if "cold"
-  const onNodeDragStart = useCallback(() => {
+  const onNodeDragStart = React.useCallback(() => {
     if (simulationRef.current) {
       simulationRef.current.alphaTarget(0.3).restart();
     }
   }, []);
 
   // Tell D3 that dragged node is fixed at mouse position
-  const onNodeDrag = useCallback((event: React.MouseEvent, node: Node) => {
-    if (simulationRef.current) {
-      const d3Node = simulationRef.current
-        .nodes()
-        .find((n) => n.id === node.id);
-      if (d3Node) {
-        d3Node.fx = node.position.x;
-        d3Node.fy = node.position.y;
+  const onNodeDrag = React.useCallback(
+    (event: React.MouseEvent, node: Node) => {
+      if (simulationRef.current) {
+        const d3Node = simulationRef.current
+          .nodes()
+          .find((n) => n.id === node.id);
+        if (d3Node) {
+          d3Node.fx = node.position.x;
+          d3Node.fy = node.position.y;
+        }
       }
-    }
-  }, []);
+    },
+    []
+  );
 
   // Let dragged node float freely again + cool down sim
-  const onNodeDragStop = useCallback((event: React.MouseEvent, node: Node) => {
-    if (simulationRef.current) {
-      const d3Node = simulationRef.current
-        .nodes()
-        .find((n) => n.id === node.id);
-      if (d3Node) {
-        d3Node.fx = null;
-        d3Node.fy = null;
+  const onNodeDragStop = React.useCallback(
+    (event: React.MouseEvent, node: Node) => {
+      if (simulationRef.current) {
+        const d3Node = simulationRef.current
+          .nodes()
+          .find((n) => n.id === node.id);
+        if (d3Node) {
+          d3Node.fx = null;
+          d3Node.fy = null;
+        }
+        // Cool down sim
+        simulationRef.current.alphaTarget(0);
       }
-      // Cool down sim
-      simulationRef.current.alphaTarget(0);
-    }
-  }, []);
+    },
+    []
+  );
 
   // Highlight selected node
-  const onNodeMouseEnter = useCallback(
+  const onNodeMouseEnter = React.useCallback(
     (_: React.MouseEvent, node: Node) => {
       // Find all edges connected to hovered node
       const connectedEdges = edges.filter(
@@ -260,7 +318,7 @@ export function GraphClientInternal({
   );
 
   // Reset highlights
-  const onNodeMouseLeave = useCallback(() => {
+  const onNodeMouseLeave = React.useCallback(() => {
     setNodes((nds) =>
       nds.map((n) => ({
         ...n,
@@ -297,6 +355,11 @@ export function GraphClientInternal({
       {enableSearch && (
         <Panel position="top-right">
           <GraphSearch nodes={nodes} />
+          <GraphFilter
+            categories={uniqueCategories}
+            selectedCategories={selectedCategories}
+            onToggleCategory={toggleCategory}
+          />
         </Panel>
       )}
     </ReactFlow>

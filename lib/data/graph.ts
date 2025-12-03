@@ -6,6 +6,7 @@ type PageData = {
   title: string;
   slug: string;
   color_hex: string | null;
+  category_title: string | null;
 };
 
 type LinkData = {
@@ -29,7 +30,8 @@ export async function getGraphData(): Promise<{
           p.id, 
           p.title, 
           p.slug, 
-          c.color_hex 
+          c.color_hex,
+          c.name as category_title
         FROM 
           pages p
         LEFT JOIN 
@@ -54,6 +56,7 @@ export async function getGraphData(): Promise<{
       label: page.title,
       slug: page.slug,
       color: page.color_hex,
+      category: page.category_title,
       incomingLinkCount: linkCounts.get(page.id) || 0,
     }));
 
@@ -93,7 +96,13 @@ export async function getPageNeighborhood(slug: string): Promise<{
       center AS (SELECT id FROM pages WHERE id = ${centerPage.id}),
       
       outgoing AS (
-        SELECT p.id, p.title, p.slug, c.color_hex, 'outgoing' as type
+        SELECT
+          p.id,
+          p.title,
+          p.slug,
+          c.color_hex,
+          c.name as category_title,
+          'outgoing' as type
         FROM links l
         JOIN pages p ON l.target_page_id = p.id
         LEFT JOIN categories c ON p.category_id = c.id
@@ -101,7 +110,13 @@ export async function getPageNeighborhood(slug: string): Promise<{
       ),
       
       incoming AS (
-        SELECT p.id, p.title, p.slug, c.color_hex, 'incoming' as type
+        SELECT
+          p.id,
+          p.title,
+          p.slug,
+          c.color_hex,
+          c.name as category_title,
+          'incoming' as type
         FROM links l
         JOIN pages p ON l.source_page_id = p.id
         LEFT JOIN categories c ON p.category_id = c.id
@@ -115,9 +130,12 @@ export async function getPageNeighborhood(slug: string): Promise<{
 
     // Get center page color
     const centerCategoryResult = await sql`
-        SELECT color_hex FROM categories WHERE id = ${centerPage.category_id}
+        SELECT color_hex, title FROM categories WHERE id = ${centerPage.category_id}
     `;
-    const centerColor = centerCategoryResult[0]?.color_hex || null;
+    const centerCategory = centerCategoryResult[0] || {
+      color_hex: null,
+      title: null,
+    };
 
     // --- Construct nodes ---
     const nodes: GraphNode[] = [];
@@ -127,7 +145,8 @@ export async function getPageNeighborhood(slug: string): Promise<{
       id: centerPage.id,
       label: centerPage.title,
       slug: centerPage.slug,
-      color: centerColor,
+      color: centerCategory.color_hex,
+      category: centerCategory.title,
       incomingLinkCount: neighborsResult.length + 5, // Make center node biggest
     });
 
@@ -142,6 +161,7 @@ export async function getPageNeighborhood(slug: string): Promise<{
           label: n.title,
           slug: n.slug,
           color: n.color_hex,
+          category: n.category_title,
           incomingLinkCount: 1, // Keep neighbors smaller
         });
       }
