@@ -33,6 +33,8 @@ const nodeTypes = {
   custom: CustomNode,
 };
 
+type SimulationNode = SimulationNodeDatum & Node;
+
 type GraphClientProps = {
   nodes: GraphNode[];
   edges: GraphEdge[];
@@ -57,7 +59,7 @@ export function GraphClientInternal({
 
   // Keep track of the simulation instance
   const simulationRef = React.useRef<d3.Simulation<
-    SimulationNodeDatum,
+    SimulationNode,
     undefined
   > | null>(null);
 
@@ -85,7 +87,7 @@ export function GraphClientInternal({
     if (uniqueCategories.length > 0 && selectedCategories.length === 0) {
       setSelectedCategories(uniqueCategories.map((c) => c.name));
     }
-  }, [uniqueCategories]);
+  }, [uniqueCategories, selectedCategories.length]);
 
   const toggleCategory = (catName: string) => {
     setSelectedCategories(
@@ -117,11 +119,10 @@ export function GraphClientInternal({
     const initialNodes: Node[] = filteredNodes.map((node) => ({
       id: node.id,
       type: "custom",
-      position: { x: 0, y: 0 },
-      // position: {
-      //   x: (Math.random() - 0.5) * 500, // Random spread between -250 and 250
-      //   y: (Math.random() - 0.5) * 500,
-      // },
+      position: {
+        x: (Math.random() - 0.5) * 500, // Random spread between -250 and 250
+        y: (Math.random() - 0.5) * 500,
+      },
       data: {
         label: node.label,
         slug: node.slug,
@@ -144,7 +145,7 @@ export function GraphClientInternal({
   // Physics Engine
   React.useEffect(() => {
     // Only run the simulation if nodes exist and React Flow has initialized them
-    if (!nodesInitialized || nodes.length === 0) return;
+    if (!nodesInitialized || filteredNodes.length === 0) return;
 
     // Simplified nodes/links for D3 to calculate
     const d3Nodes = nodes.map((node) => ({
@@ -165,7 +166,7 @@ export function GraphClientInternal({
       .force(
         "link",
         forceLink(d3Links)
-          .id((d) => (d as any).id)
+          .id((d) => (d as SimulationNode).id)
           .distance(150) // Desired length of lines
       )
       // Force 2: Nodes push each other away
@@ -353,13 +354,13 @@ export function GraphClientInternal({
       <Background />
 
       {enableSearch && (
-        <Panel position="top-right">
-          <GraphSearch nodes={nodes} />
+        <Panel position="top-right" className="flex gap-2 items-start">
           <GraphFilter
             categories={uniqueCategories}
             selectedCategories={selectedCategories}
             onToggleCategory={toggleCategory}
           />
+          <GraphSearch nodes={nodes} />
         </Panel>
       )}
     </ReactFlow>
