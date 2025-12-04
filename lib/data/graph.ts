@@ -130,7 +130,7 @@ export async function getPageNeighborhood(slug: string): Promise<{
 
     // Get center page color
     const centerCategoryResult = await sql`
-        SELECT color_hex, title FROM categories WHERE id = ${centerPage.category_id}
+        SELECT color_hex, name FROM categories WHERE id = ${centerPage.category_id}
     `;
     const centerCategory = centerCategoryResult[0] || {
       color_hex: null,
