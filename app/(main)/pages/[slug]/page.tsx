@@ -5,6 +5,9 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import React from "react";
 import { GraphClient } from "@/components/graph/graph-client";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 
 const components = {
   // --- Headers ---
@@ -91,7 +94,16 @@ export default async function PageBySlug({ params }: PageProps) {
       <hr className="my-8" />
 
       {/* Main Page Content */}
-      <MDXRemote source={page.content} components={components} />
+      <MDXRemote
+        source={page.content}
+        components={components}
+        options={{
+          mdxOptions: {
+            remarkPlugins: [remarkMath],
+            rehypePlugins: [rehypeKatex],
+          },
+        }}
+      />
 
       {/* Mini Graph */}
       <hr className="my-12 border-dashed" />
