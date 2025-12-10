@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
+// UI Components
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,13 +27,79 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { CardContent, CardFooter } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
+// Editor and Preview Imports
+import CodeMirror from "@uiw/react-codemirror";
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import { languages } from "@codemirror/language-data";
+import ReactMarkdown from "react-markdown";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css"; // Styles for Math
+
 import { Category } from "@/types/types";
+import { cn } from "@/lib/utils";
 
 const generateSlug = (title: string) => {
   return title
     .toLowerCase()
     .replace(/\s+/g, "-") // Replace spaces with -
     .replace(/[^\w-]+/g, ""); // Remove all non-word chars
+};
+
+// --- Preview Components ---
+const previewComponents = {
+  h1: ({ node, ...props }: any) => (
+    <h1 className="text-4xl font-bold text-foreground mt-8 mb-4" {...props} />
+  ),
+  h2: ({ node, ...props }: any) => (
+    <h2
+      className="text-3xl font-semibold text-foreground mt-8 mb-4"
+      {...props}
+    />
+  ),
+  h3: ({ node, ...props }: any) => (
+    <h3
+      className="text-2xl font-semibold text-foreground mt-6 mb-2"
+      {...props}
+    />
+  ),
+  p: ({ node, ...props }: any) => (
+    <p className="my-4 text-base leading-7 text-muted-foreground" {...props} />
+  ),
+  ul: ({ node, ...props }: any) => (
+    <ul className="list-disc list-inside my-4 pl-4" {...props} />
+  ),
+  ol: ({ node, ...props }: any) => (
+    <ol className="list-decimal list-inside my-4 pl-4" {...props} />
+  ),
+  li: ({ node, ...props }: any) => <li className="my-2" {...props} />,
+  a: ({ node, ...props }: any) => (
+    <a
+      className="font-medium text-primary underline decoration-dotted hover:text-primary/80"
+      {...props}
+    />
+  ),
+  blockquote: ({ node, ...props }: any) => (
+    <blockquote className="border-l-4 border-primary pl-4 italic" {...props} />
+  ),
+  code: ({ node, inline, className, children, ...props }: any) => {
+    return inline ? (
+      <code
+        className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono"
+        {...props}
+      >
+        {children}
+      </code>
+    ) : (
+      <pre className="bg-muted p-4 rounded-lg overflow-x-auto my-4">
+        <code className="text-sm font-mono" {...props}>
+          {children}
+        </code>
+      </pre>
+    );
+  },
 };
 
 type CreatePageFormProps = {
@@ -46,6 +114,9 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
 
+  const [viewMode, setViewMode] = useState<"edit" | "preview" | "split">(
+    "split"
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -84,6 +155,7 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
     <>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-6">
+          {/* Top Row: Title & Slug */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="grid gap-2">
               <Label htmlFor="title">Title</Label>
@@ -127,28 +199,99 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
               </SelectContent>
             </Select>
           </div>
+
           <div className="grid gap-2">
-            <Label htmlFor="description">Meta Description (for SEO)</Label>
+            <Label htmlFor="description">Meta Description</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
+              placeholder="A brief summary for search results..."
+              className="resize-none h-20"
             />
           </div>
+
+          {/* --- Editor Section --- */}
           <div className="grid gap-2">
-            <Label htmlFor="content">Content (MDX)</Label>
-            <Textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              rows={25}
-              className="min-h-[400px]"
-            />
+            <div className="flex items-center justify-between">
+              <Label htmlFor="content">Content (MDX)</Label>
+              <Tabs
+                value={viewMode}
+                onValueChange={(v) => setViewMode(v as any)}
+                className="w-[200px]"
+              >
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="edit">Edit</TabsTrigger>
+                  <TabsTrigger value="split">Split</TabsTrigger>
+                  <TabsTrigger value="preview">View</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+
+            <div className="border rounded-md min-h-[500px] flex overflow-hidden bg-background">
+              {/* Code Editor */}
+              <div
+                className={cn(
+                  "flex-1 border-r overflow-auto transition-all",
+                  viewMode === "preview" ? "hidden" : "block",
+                  viewMode === "split" ? "w-1/2" : "w-full"
+                )}
+              >
+                <CodeMirror
+                  value={content}
+                  height="500px"
+                  extensions={[
+                    markdown({
+                      base: markdownLanguage,
+                      codeLanguages: languages,
+                    }),
+                  ]}
+                  onChange={(value) => setContent(value)}
+                  className="text-base"
+                  theme="dark" // TODO: match user's mode
+                />
+              </div>
+
+              {/* Live Preview */}
+              <div
+                className={cn(
+                  "flex-1 bg-background p-6 overflow-auto transition-all",
+                  viewMode === "edit" ? "hidden" : "block",
+                  viewMode === "split" ? "w-1/2" : "w-full"
+                )}
+                style={{ height: "500px" }}
+              >
+                {content ? (
+                  <div className="prose dark:prose-invert max-w-none">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkMath]}
+                      rehypePlugins={[rehypeKatex]}
+                      components={previewComponents}
+                    >
+                      {content}
+                    </ReactMarkdown>
+                  </div>
+                ) : (
+                  <div className="h-full flex items-center justify-center text-muted-foreground italic">
+                    Start typing to see the preview...
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <p className="text-xs text-muted-foreground mt-1">
+              Supports Markdown, LaTeX math ($...$), and code blocks.
+            </p>
           </div>
         </CardContent>
+
         <CardFooter className="pt-6">
-          <Button type="submit" disabled={isLoading}>
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full md:w-auto"
+          >
             {isLoading ? "Creating..." : "Create Page"}
           </Button>
         </CardFooter>
