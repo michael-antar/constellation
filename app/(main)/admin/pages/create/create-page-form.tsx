@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
 
 // UI Components
@@ -57,6 +58,8 @@ type CreatePageFormProps = {
 
 export function CreatePageForm({ categories }: CreatePageFormProps) {
   const router = useRouter();
+  const { resolvedTheme } = useTheme();
+
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
@@ -196,7 +199,7 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
                   ]}
                   onChange={(value) => setContent(value)}
                   className="text-base"
-                  theme="dark" // TODO: match user's mode
+                  theme={resolvedTheme === "dark" ? "dark" : "light"}
                 />
               </div>
 
