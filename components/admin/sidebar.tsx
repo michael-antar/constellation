@@ -15,7 +15,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 h-screen p-4 bg-muted/40 border-r">
+    <aside className="w-64 h-screen p-4 bg-muted/40 border-r sticky top-0">
       <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
       <nav className="flex flex-col space-y-2">
         {navItems.map((item) => (
