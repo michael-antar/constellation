@@ -73,7 +73,11 @@ export const mdxComponents = {
   },
 
   // Code Blocks
-  code: ({ inline, children, ...props }: any) => {
+  code: ({
+    inline,
+    children,
+    ...props
+  }: React.ComponentProps<"code"> & { inline?: boolean }) => {
     if (inline) {
       return (
         <code

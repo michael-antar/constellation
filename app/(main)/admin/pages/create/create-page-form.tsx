@@ -27,7 +27,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { CardContent, CardFooter } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mdxComponents } from "@/components/mdx-components";
 
 // Editor and Preview Imports
@@ -49,6 +49,8 @@ const generateSlug = (title: string) => {
     .replace(/[^\w-]+/g, ""); // Remove all non-word chars
 };
 
+type ViewMode = "edit" | "preview" | "split";
+
 type CreatePageFormProps = {
   categories: Category[];
 };
@@ -61,9 +63,7 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
 
-  const [viewMode, setViewMode] = useState<"edit" | "preview" | "split">(
-    "split"
-  );
+  const [viewMode, setViewMode] = useState<ViewMode>("split");
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -165,7 +165,7 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
               <Label htmlFor="content">Content (MDX)</Label>
               <Tabs
                 value={viewMode}
-                onValueChange={(v) => setViewMode(v as any)}
+                onValueChange={(v) => setViewMode(v as ViewMode)}
                 className="w-[200px]"
               >
                 <TabsList className="grid w-full grid-cols-3">
