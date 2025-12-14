@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { mdxComponents } from "@/components/mdx-components";
 
 // Editor and Preview Imports
 import CodeMirror from "@uiw/react-codemirror";
@@ -46,60 +47,6 @@ const generateSlug = (title: string) => {
     .toLowerCase()
     .replace(/\s+/g, "-") // Replace spaces with -
     .replace(/[^\w-]+/g, ""); // Remove all non-word chars
-};
-
-// --- Preview Components ---
-const previewComponents = {
-  h1: ({ node, ...props }: any) => (
-    <h1 className="text-4xl font-bold text-foreground mt-8 mb-4" {...props} />
-  ),
-  h2: ({ node, ...props }: any) => (
-    <h2
-      className="text-3xl font-semibold text-foreground mt-8 mb-4"
-      {...props}
-    />
-  ),
-  h3: ({ node, ...props }: any) => (
-    <h3
-      className="text-2xl font-semibold text-foreground mt-6 mb-2"
-      {...props}
-    />
-  ),
-  p: ({ node, ...props }: any) => (
-    <p className="my-4 text-base leading-7 text-muted-foreground" {...props} />
-  ),
-  ul: ({ node, ...props }: any) => (
-    <ul className="list-disc list-inside my-4 pl-4" {...props} />
-  ),
-  ol: ({ node, ...props }: any) => (
-    <ol className="list-decimal list-inside my-4 pl-4" {...props} />
-  ),
-  li: ({ node, ...props }: any) => <li className="my-2" {...props} />,
-  a: ({ node, ...props }: any) => (
-    <a
-      className="font-medium text-primary underline decoration-dotted hover:text-primary/80"
-      {...props}
-    />
-  ),
-  blockquote: ({ node, ...props }: any) => (
-    <blockquote className="border-l-4 border-primary pl-4 italic" {...props} />
-  ),
-  code: ({ node, inline, className, children, ...props }: any) => {
-    return inline ? (
-      <code
-        className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono"
-        {...props}
-      >
-        {children}
-      </code>
-    ) : (
-      <pre className="bg-muted p-4 rounded-lg overflow-x-auto my-4">
-        <code className="text-sm font-mono" {...props}>
-          {children}
-        </code>
-      </pre>
-    );
-  },
 };
 
 type CreatePageFormProps = {
@@ -267,7 +214,7 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
                     <ReactMarkdown
                       remarkPlugins={[remarkMath]}
                       rehypePlugins={[rehypeKatex]}
-                      components={previewComponents}
+                      components={mdxComponents}
                     >
                       {content}
                     </ReactMarkdown>
