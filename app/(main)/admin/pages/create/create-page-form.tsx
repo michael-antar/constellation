@@ -101,7 +101,7 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 px-0">
           {/* Top Row: Title & Slug */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="grid gap-2">
@@ -233,7 +233,7 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
           </div>
         </CardContent>
 
-        <CardFooter className="pt-6">
+        <CardFooter className="pt-6 px-0">
           <Button
             type="submit"
             disabled={isLoading}
