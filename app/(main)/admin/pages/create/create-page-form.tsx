@@ -32,7 +32,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mdxComponents } from "@/components/mdx-components";
 
 // Editor and Preview Imports
-import CodeMirror from "@uiw/react-codemirror";
+import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
 import ReactMarkdown from "react-markdown";
@@ -200,6 +200,7 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
                     base: markdownLanguage,
                     codeLanguages: languages,
                   }),
+                  EditorView.lineWrapping,
                 ]}
                 onChange={(value) => setContent(value)}
                 className="text-base"

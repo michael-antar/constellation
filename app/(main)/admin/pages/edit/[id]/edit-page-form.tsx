@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select";
 
 // Editor and Preview Imports
-import CodeMirror from "@uiw/react-codemirror";
+import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
 import ReactMarkdown from "react-markdown";
@@ -200,6 +200,7 @@ export function EditPageForm({ page, categories }: EditPageFormProps) {
                   base: markdownLanguage,
                   codeLanguages: languages,
                 }),
+                EditorView.lineWrapping,
               ]}
               onChange={(value) =>
                 setFormData((prev) => ({ ...prev, content: value }))
