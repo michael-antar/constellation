@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 import { toast } from "sonner";
 
 // UI Components
@@ -27,7 +28,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { CardContent, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mdxComponents } from "@/components/mdx-components";
 
@@ -103,148 +103,151 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-6 px-0">
-          {/* Top Row: Title & Slug */}
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="grid gap-2">
-              <Label htmlFor="title">Title</Label>
-              <Input
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="slug">URL Slug</Label>
-              <Input
-                id="slug"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
+      <form onSubmit={handleSubmit} className="space-y-6 px-0">
+        {/* Top Section: Title & Slug */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* Title */}
           <div className="grid gap-2">
-            <Label htmlFor="category">Category</Label>
-            <Select
-              name="category"
-              value={categoryId ?? ""}
-              onValueChange={(value) => {
-                setCategoryId(value === "none" ? null : value);
-              }}
-            >
-              <SelectTrigger id="category">
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">None</SelectItem>
-                {categories.map((cat) => (
-                  <SelectItem key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="description">Meta Description</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               required
-              placeholder="A brief summary for search results..."
-              className="resize-none h-20"
             />
           </div>
 
-          {/* --- Editor Section --- */}
+          {/* Slug */}
           <div className="grid gap-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="content">Content (MDX)</Label>
-              <Tabs
-                value={viewMode}
-                onValueChange={(v) => setViewMode(v as ViewMode)}
-                className="w-[200px]"
-              >
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="edit">Edit</TabsTrigger>
-                  <TabsTrigger value="split">Split</TabsTrigger>
-                  <TabsTrigger value="preview">View</TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
-
-            <div className="border rounded-md min-h-[500px] flex overflow-hidden bg-background">
-              {/* Code Editor */}
-              <div
-                className={cn(
-                  "flex-1 border-r overflow-auto transition-all",
-                  viewMode === "preview" ? "hidden" : "block",
-                  viewMode === "split" ? "w-1/2" : "w-full"
-                )}
-              >
-                <CodeMirror
-                  value={content}
-                  height="500px"
-                  extensions={[
-                    markdown({
-                      base: markdownLanguage,
-                      codeLanguages: languages,
-                    }),
-                  ]}
-                  onChange={(value) => setContent(value)}
-                  className="text-base"
-                  theme={resolvedTheme === "dark" ? "dark" : "light"}
-                />
-              </div>
-
-              {/* Live Preview */}
-              <div
-                className={cn(
-                  "flex-1 bg-background p-6 overflow-auto transition-all",
-                  viewMode === "edit" ? "hidden" : "block",
-                  viewMode === "split" ? "w-1/2" : "w-full"
-                )}
-                style={{ height: "500px" }}
-              >
-                {content ? (
-                  <div className="prose dark:prose-invert max-w-none">
-                    <ReactMarkdown
-                      remarkPlugins={[remarkMath]}
-                      rehypePlugins={[rehypeKatex]}
-                      components={mdxComponents}
-                    >
-                      {content}
-                    </ReactMarkdown>
-                  </div>
-                ) : (
-                  <div className="h-full flex items-center justify-center text-muted-foreground italic">
-                    Start typing to see the preview...
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <p className="text-xs text-muted-foreground mt-1">
-              Supports Markdown, LaTeX math ($...$), and code blocks.
-            </p>
+            <Label htmlFor="slug">URL Slug</Label>
+            <Input
+              id="slug"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+              required
+            />
           </div>
-        </CardContent>
+        </div>
 
-        <CardFooter className="pt-6 px-0">
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="w-full md:w-auto"
+        {/* Category */}
+        <div className="grid gap-2">
+          <Label htmlFor="category">Category</Label>
+          <Select
+            name="category"
+            value={categoryId ?? ""}
+            onValueChange={(value) => {
+              setCategoryId(value === "none" ? null : value);
+            }}
           >
+            <SelectTrigger id="category">
+              <SelectValue placeholder="Select a category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">None</SelectItem>
+              {categories.map((cat) => (
+                <SelectItem key={cat.id} value={cat.id}>
+                  {cat.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Description */}
+        <div className="grid gap-2">
+          <Label htmlFor="description">Meta Description</Label>
+          <Textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+            placeholder="A brief summary for search results..."
+            className="resize-none h-20"
+          />
+        </div>
+
+        {/* --- Editor Section --- */}
+        <div className="grid gap-2">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="content">Content (MDX)</Label>
+            <Tabs
+              value={viewMode}
+              onValueChange={(v) => setViewMode(v as ViewMode)}
+              className="w-[200px]"
+            >
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="edit">Edit</TabsTrigger>
+                <TabsTrigger value="split">Split</TabsTrigger>
+                <TabsTrigger value="preview">View</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+
+          <div className="border rounded-md min-h-[500px] flex overflow-hidden bg-background">
+            {/* Code Editor */}
+            <div
+              className={cn(
+                "flex-1 border-r overflow-auto transition-all",
+                viewMode === "preview" ? "hidden" : "block",
+                viewMode === "split" ? "w-1/2" : "w-full"
+              )}
+            >
+              <CodeMirror
+                value={content}
+                height="500px"
+                extensions={[
+                  markdown({
+                    base: markdownLanguage,
+                    codeLanguages: languages,
+                  }),
+                ]}
+                onChange={(value) => setContent(value)}
+                className="text-base"
+                theme={resolvedTheme === "dark" ? "dark" : "light"}
+              />
+            </div>
+
+            {/* Live Preview */}
+            <div
+              className={cn(
+                "flex-1 bg-background p-6 overflow-auto transition-all",
+                viewMode === "edit" ? "hidden" : "block",
+                viewMode === "split" ? "w-1/2" : "w-full"
+              )}
+              style={{ height: "500px" }}
+            >
+              {content ? (
+                <div className="prose dark:prose-invert max-w-none">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkMath]}
+                    rehypePlugins={[rehypeKatex]}
+                    components={mdxComponents}
+                  >
+                    {content}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                <div className="h-full flex items-center justify-center text-muted-foreground italic">
+                  Start typing to see the preview...
+                </div>
+              )}
+            </div>
+          </div>
+
+          <p className="text-xs text-muted-foreground mt-1">
+            Supports Markdown, LaTeX math ($...$), and code blocks.
+          </p>
+        </div>
+
+        {/* Footer Actions */}
+        <div className="flex justify-end gap-2 pt-4">
+          <Button variant="outline" asChild>
+            <Link href="/admin/pages">Cancel</Link>
+          </Button>
+          <Button type="submit" disabled={isLoading}>
             {isLoading ? "Creating..." : "Create Page"}
           </Button>
-        </CardFooter>
+        </div>
       </form>
 
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
