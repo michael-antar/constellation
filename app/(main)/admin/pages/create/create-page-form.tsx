@@ -236,7 +236,14 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
           </div>
 
           <p className="text-xs text-muted-foreground mt-1">
-            Supports Markdown, LaTeX math ($...$), and code blocks.
+            Supports Markdown, LaTeX math ($...$), and code blocks.{" "}
+            <a
+              href="/admin/pages/reference"
+              target="_blank"
+              className="text-xs text-muted-foreground hover:text-primary underline underline-offset-2"
+            >
+              (View Syntax Guide)
+            </a>
           </p>
         </div>
 
