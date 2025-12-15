@@ -23,9 +23,8 @@ export default async function EditPage({ params }: EditPageProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Edit Page</h1>
-
+    <div className="mx-auto w-full max-w-7xl">
+      <h2 className="text-2xl font-bold mb-6">Edit Page</h2>
       <EditPageForm page={page} categories={categories} />
     </div>
   );
