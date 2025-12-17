@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { cn } from "@/lib/utils";
 
 export const mdxComponents = {
   // --- Headers ---
@@ -72,28 +73,58 @@ export const mdxComponents = {
     );
   },
 
-  // Code Blocks
-  code: ({
-    inline,
-    children,
-    ...props
-  }: React.ComponentProps<"code"> & { inline?: boolean }) => {
-    if (inline) {
+  // --- Code Blocks and Inline Code ---
+  pre: (props: React.ComponentProps<"pre">) => (
+    <pre className="bg-muted p-4 rounded-lg overflow-x-auto my-4" {...props} />
+  ),
+  code: ({ className, children, ...props }: React.ComponentProps<"code">) => {
+    // Blocks usually come with a class like "language-js"
+    const isBlock = /language-(\w+)/.test(className || "");
+
+    if (isBlock) {
       return (
-        <code
-          className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono"
-          {...props}
-        >
+        <code className={cn("text-sm font-mono", className)} {...props}>
           {children}
         </code>
       );
     }
+
+    // Default to inline styling if no language class is found
     return (
-      <pre className="bg-muted p-4 rounded-lg overflow-x-auto my-4">
-        <code className="text-sm font-mono" {...props}>
-          {children}
-        </code>
-      </pre>
+      <code
+        className={cn(
+          "bg-muted px-1.5 py-0.5 rounded text-sm font-mono",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </code>
     );
   },
+
+  // Code Blocks
+  // code: ({
+  //   inline,
+  //   children,
+  //   ...props
+  // }: React.ComponentProps<"code"> & { inline?: boolean }) => {
+  //   if (inline) {
+  //     return (
+  //       <code
+  //         className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono"
+  //         {...props}
+  //       >
+  //         {children}
+  //       </code>
+  //     );
+  //   }
+  //   return (
+  //     <pre className="bg-muted p-4 rounded-lg overflow-x-auto my-4">
+  //       <code className="text-sm font-mono" {...props}>
+  //         {children}
+  //       </code>
+  //     </pre>
+  //   );
+  // },
 };

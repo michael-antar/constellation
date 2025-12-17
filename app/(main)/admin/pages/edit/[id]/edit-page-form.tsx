@@ -240,7 +240,7 @@ export function EditPageForm({ page, categories }: EditPageFormProps) {
         <p className="text-xs text-muted-foreground">
           Supports Markdown, LaTeX math ($...$), and code blocks.{" "}
           <a
-            href="/admin/pages/reference"
+            href="/reference"
             target="_blank"
             className="text-xs text-muted-foreground hover:text-primary underline underline-offset-2"
           >
