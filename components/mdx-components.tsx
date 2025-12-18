@@ -33,10 +33,10 @@ export const mdxComponents = {
     <em className="italic text-italic" {...props} />
   ),
   ul: (props: React.ComponentProps<"ul">) => (
-    <ul className="list-disc list-inside my-4 pl-4" {...props} />
+    <ul className="list-disc list-inside my-4 pl-4 text-p" {...props} />
   ),
   ol: (props: React.ComponentProps<"ol">) => (
-    <ol className="list-decimal list-inside my-4 pl-4" {...props} />
+    <ol className="list-decimal list-inside my-4 pl-4 text-p" {...props} />
   ),
   li: (props: React.ComponentProps<"li">) => <li className="my-2" {...props} />,
   hr: (props: React.ComponentProps<"hr">) => (
