@@ -38,6 +38,7 @@ import { languages } from "@codemirror/language-data";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import rehypeRaw from "rehype-raw";
 import "katex/dist/katex.min.css"; // Styles for Math
 
 import { Category } from "@/types/types";
@@ -221,7 +222,7 @@ export function CreatePageForm({ categories }: CreatePageFormProps) {
                 <div className="prose dark:prose-invert max-w-none">
                   <ReactMarkdown
                     remarkPlugins={[remarkMath]}
-                    rehypePlugins={[rehypeKatex]}
+                    rehypePlugins={[rehypeRaw, rehypeKatex]}
                     components={mdxComponents}
                   >
                     {content}

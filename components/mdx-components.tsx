@@ -2,7 +2,32 @@ import Link from "next/link";
 import React from "react";
 import { cn } from "@/lib/utils";
 
+import { AlertTriangle } from "lucide-react";
+
+// --- Custom Component Declarations ---
+
+// Warning
+const Warning = ({
+  content,
+  children,
+}: {
+  content?: string;
+  children?: React.ReactNode;
+}) => (
+  <div className="flex items-start gap-3 p-4 my-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900 text-yellow-800 dark:text-yellow-200">
+    <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
+    <div className="text-sm leading-relaxed">
+      <strong>Warning: </strong>
+      {content || children}
+    </div>
+  </div>
+);
+
 export const mdxComponents = {
+  // -- Custom MDX Components ---
+  Warning,
+  warning: Warning,
+
   // --- Headers ---
   h1: (props: React.ComponentProps<"h1">) => (
     <h1 className="text-5xl font-bold text-h1" {...props} />
@@ -102,29 +127,4 @@ export const mdxComponents = {
       </code>
     );
   },
-
-  // Code Blocks
-  // code: ({
-  //   inline,
-  //   children,
-  //   ...props
-  // }: React.ComponentProps<"code"> & { inline?: boolean }) => {
-  //   if (inline) {
-  //     return (
-  //       <code
-  //         className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono"
-  //         {...props}
-  //       >
-  //         {children}
-  //       </code>
-  //     );
-  //   }
-  //   return (
-  //     <pre className="bg-muted p-4 rounded-lg overflow-x-auto my-4">
-  //       <code className="text-sm font-mono" {...props}>
-  //         {children}
-  //       </code>
-  //     </pre>
-  //   );
-  // },
 };
