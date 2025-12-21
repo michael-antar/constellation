@@ -6,22 +6,31 @@ import { AlertTriangle } from "lucide-react";
 
 // --- Custom Component Declarations ---
 
-// Warning
 const Warning = ({
   content,
   children,
-}: {
-  content?: string;
-  children?: React.ReactNode;
-}) => (
-  <div className="flex items-start gap-3 p-4 my-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900 text-yellow-800 dark:text-yellow-200">
-    <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
-    <div className="text-sm leading-relaxed">
-      <strong>Warning: </strong>
-      {content || children}
-    </div>
-  </div>
-);
+  className,
+  node, // Extracted to be removed
+  ...props // Spread to the element for added flexibility
+}: any) => {
+  return (
+    <span
+      className={cn(
+        "flex items-start gap-3 p-4 my-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900 text-yellow-800 dark:text-yellow-200",
+        className
+      )}
+      {...props}
+    >
+      <span className="shrink-0 mt-0.5">
+        <AlertTriangle className="w-5 h-5" />
+      </span>
+      <span className="text-sm leading-relaxed block">
+        <strong className="font-bold">Warning: </strong>
+        {content || children}
+      </span>
+    </span>
+  );
+};
 
 export const mdxComponents = {
   // -- Custom MDX Components ---
