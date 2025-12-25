@@ -15,56 +15,23 @@ import { languages } from "@codemirror/language-data";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import rehypeRaw from "rehype-raw";
 import "katex/dist/katex.min.css";
 import { mdxComponents } from "@/components/mdx-components";
 
 type ViewMode = "edit" | "preview" | "split";
 
-const EXAMPLE_CONTENT = `# Heading Level 1
-## Heading Level 2
-### Heading Level 3
-
-This is a standard paragraph with **bold text**, *italic text*, and \`inline code\`.
-
----
-
-### Lists
-- Unordered list item
-- Another item
-  - Nested item
-
-1. Ordered list item
-2. Second item
-
-### Code Blocks
-\`\`\`javascript
-function helloWorld() {
-  console.log("Hello, Constellation!");
+interface ReferenceClientProps {
+  initialContent: string;
 }
-\`\`\`
 
-### Math (LaTeX)
-Inline math: $E = mc^2$
-
-Block math:
-$$
-\\int_{0}^{\\infty} x^2 dx
-$$
-
-### Blockquotes
-> This is a blockquote.
-> It can span multiple lines.
-
-### Links
-- [Internal Link](/pages/algorithms)
-- [External Link](https://nextjs.org)
-`;
-
-export default function ReferenceClient() {
+export default function ReferenceClient({
+  initialContent,
+}: ReferenceClientProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("split");
-  const [content, setContent] = useState(EXAMPLE_CONTENT);
+  const [content, setContent] = useState(initialContent);
 
   useEffect(() => {
     setMounted(true);
@@ -137,7 +104,7 @@ export default function ReferenceClient() {
                 <div className="prose dark:prose-invert max-w-none">
                   <ReactMarkdown
                     remarkPlugins={[remarkMath]}
-                    rehypePlugins={[rehypeKatex]}
+                    rehypePlugins={[rehypeRaw, rehypeKatex]}
                     components={mdxComponents}
                   >
                     {content}
