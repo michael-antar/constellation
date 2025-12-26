@@ -1,31 +1,64 @@
-# Heading Level 1
+This is a **reference sheet** to _demonstrate_ and _showcase_ what can be accomplished using base markdown and my custom mdx components. The left panel is the raw mdx that you write, and the right panel is a preview of what would be actually displayed.
 
-## Heading Level 2
+# Standard Markdown
 
-### Heading Level 3
+This are the _base features_ of markdown (along with some HTML tags). Please take a look even if you are familiar, since a lot of the components are **customly styled for this project**.
 
-This is a standard paragraph with **bold text**, _italic text_, and \`inline code\`.
+## Headings
+
+Each of the headings **shrink in size and change colors** to help distinguish them. The colors chosen are different for light and dark mode. The colors are meant to match the "space" theme of the project.
 
 ---
 
-### Lists
+# Heading 1
 
-- Unordered list item
+## Heading 2
+
+### Heading 3
+
+#### Heading 4
+
+##### Heading 5
+
+###### Heading 6
+
+####### Heading 7
+
+---
+
+## Standard Text
+
+This is a standard paragraph with **bold text**, _italic text_, and `inline code`. It also supports **_bolded italics_**, <del>strikethrough</del>, and <mark>highlights</mark> (using HTML tags).
+
+---
+
+## Lists
+
+Lists are kept nearly the same as original markdown.
+
+### Unordered Lists
+
+- Unordered **list item**
 - Another item
-  - Nested item
+  - _Nested_ item
+- Some other item
 
-1. Ordered list item
+### Ordered Lists
+
+1. Ordered list **item**
 2. Second item
+   - Unordered list item nested _within_ ordered list item
+3. Third item
 
-### Code Blocks
+## Code Blocks
 
-\`\`\`javascript
+```javascript
 function helloWorld() {
-console.log("Hello, Constellation!");
+  console.log("Hello, Constellation!");
 }
-\`\`\`
+```
 
-### Math (LaTeX)
+## Math (LaTeX)
 
 Inline math: $E = mc^2$
 
@@ -35,12 +68,20 @@ $$
 \\int_{0}^{\\infty} x^2 dx
 $$
 
-### Blockquotes
+## Blockquotes
 
 > This is a blockquote.
 > It can span multiple lines.
 
-### Links
+## Links
 
 - [Internal Link](/pages/algorithms)
 - [External Link](https://nextjs.org)
+
+# Custom MDX Components
+
+These are custom components made by me. More will be made in the future, and changes to existing components are possible. These components are made by using tags.
+
+## Warning
+
+<Warning>This is a warning</Warning>
