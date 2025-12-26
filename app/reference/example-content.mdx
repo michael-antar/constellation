@@ -82,6 +82,23 @@ $$
 
 These are custom components made by me. More will be made in the future, and changes to existing components are possible. These components are made by using tags.
 
-## Warning
+## Alerts
 
-<Warning>This is a warning</Warning>
+Shows different levels of importance. Can be done using the `type` of the `Alert` component, or use a level directly.
+
+<Alert>This is a standard alert that defaults to info</Alert>
+
+---
+
+<Alert type=info>This is an "info" level alert achieved using the alert type</Alert>
+<Info>This is an "info" level alert achieved using the direct "Info" component</Info>
+
+---
+
+<Alert type=warning>This is a warning</Alert>
+<Warning>This is also a warning</Warning>
+
+---
+
+<Alert type=issue>THIS IS A MAJOR ISSUE</Alert>
+<Issue>A SECOND MAJOR ISSUE</Issue>
