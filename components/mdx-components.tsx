@@ -73,20 +73,16 @@ export const mdxComponents = {
 
   Tabs,
   tabs: Tabs,
-
   Tab,
   tab: Tab,
 
-  // - Alerts (and variants as their own) -
+  // Alerts (and variants as their own)
   Alert,
   alert: Alert,
-
   Info: (props: any) => <Alert type="info" {...props} />,
   info: (props: any) => <Alert type="info" {...props} />,
-
   Warning: (props: any) => <Alert type="warning" {...props} />,
   warning: (props: any) => <Alert type="warning" {...props} />,
-
   Issue: (props: any) => <Alert type="issue" {...props} />,
   issue: (props: any) => <Alert type="issue" {...props} />,
 
@@ -110,9 +106,29 @@ export const mdxComponents = {
     <h3 className="text-lg font-semibold text-h6 mt-6 mb-2" {...props} />
   ),
   // --- Basic Text ---
-  p: (props: React.ComponentProps<"p">) => (
-    <p className="my-4 text-base text-p leading-7" {...props} />
-  ),
+  // Returns a div instead of p if its children include a block-level component (fixes hydration errors)
+  p: ({ children, ...props }: React.ComponentProps<"p">) => {
+    // Check if children contains a block-level component (like Tabs)
+    const hasBlockChild = React.Children.toArray(children).some(
+      (child) =>
+        React.isValidElement(child) &&
+        // Check for specific block components or generic divs
+        (child.type === Tabs ||
+          child.type === "div" ||
+          child.type === "section")
+    );
+
+    // If it contains a block, render a div instead of p
+    if (hasBlockChild) {
+      return <div {...props}>{children}</div>;
+    }
+
+    return (
+      <p className="my-4 text-base text-p leading-7" {...props}>
+        {children}
+      </p>
+    );
+  },
   strong: (props: React.ComponentProps<"strong">) => (
     <strong className="font-bold text-bold" {...props} />
   ),
