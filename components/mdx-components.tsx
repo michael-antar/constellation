@@ -2,13 +2,15 @@ import Link from "next/link";
 import React from "react";
 import { cn } from "@/lib/utils";
 
+import { Spoiler } from "@/components/mdx/spoiler";
+import { Tabs, Tab } from "@/components/mdx/tabs";
+
 import { AlertTriangle, Info, XCircle } from "lucide-react";
 
 // --- Custom Components ---
 
-import { Spoiler } from "@/components/mdx/spoiler";
-
 // - Alert -
+
 const ALERT_VARIANTS = {
   info: {
     title: "Info",
@@ -68,6 +70,12 @@ export const mdxComponents = {
 
   Spoiler,
   spoiler: Spoiler,
+
+  Tabs,
+  tabs: Tabs,
+
+  Tab,
+  tab: Tab,
 
   // - Alerts (and variants as their own) -
   Alert,
