@@ -4,7 +4,9 @@ import { cn } from "@/lib/utils";
 
 import { AlertTriangle, Info, XCircle } from "lucide-react";
 
-// --- Custom Component Declarations ---
+// --- Custom Components ---
+
+import { Spoiler } from "@/components/mdx/spoiler";
 
 // - Alert -
 const ALERT_VARIANTS = {
@@ -63,6 +65,9 @@ const Alert = ({
 
 export const mdxComponents = {
   // --- Custom MDX Components ---
+
+  Spoiler,
+  spoiler: Spoiler,
 
   // - Alerts (and variants as their own) -
   Alert,
