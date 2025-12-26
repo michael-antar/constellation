@@ -2,68 +2,10 @@ import Link from "next/link";
 import React from "react";
 import { cn } from "@/lib/utils";
 
+// Custom components
 import { Spoiler } from "@/components/mdx/spoiler";
 import { Tabs, Tab } from "@/components/mdx/tabs";
-
-import { AlertTriangle, Info, XCircle } from "lucide-react";
-
-// --- Custom Components ---
-
-// - Alert -
-
-const ALERT_VARIANTS = {
-  info: {
-    title: "Info",
-    icon: Info,
-    styles:
-      "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-900 text-blue-800 dark:text-blue-200",
-  },
-  warning: {
-    title: "Warning",
-    icon: AlertTriangle,
-    styles:
-      "bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-900 text-yellow-800 dark:text-yellow-200",
-  },
-  issue: {
-    title: "Issue",
-    icon: XCircle,
-    styles:
-      "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-900 text-red-800 dark:text-red-200",
-  },
-};
-
-type AlertType = keyof typeof ALERT_VARIANTS;
-
-const Alert = ({
-  content,
-  children,
-  className,
-  type = "info", // Default to info
-  node, // Extracted to be removed
-  ...props // Spread to the element for added flexibility
-}: any) => {
-  const variant = ALERT_VARIANTS[type as AlertType] || ALERT_VARIANTS.info;
-  const Icon = variant.icon;
-
-  return (
-    <span
-      className={cn(
-        "flex items-start gap-3 p-4 my-4 rounded-lg border",
-        variant.styles,
-        className
-      )}
-      {...props}
-    >
-      <span className="shrink-0 mt-0.5">
-        <Icon className="w-5 h-5" />
-      </span>
-      <span className="text-sm leading-relaxed block">
-        <strong className="font-bold">{variant.title}: </strong>
-        {content || children}
-      </span>
-    </span>
-  );
-};
+import { Alert, Info, Warning, Issue } from "@/components/mdx/alert";
 
 export const mdxComponents = {
   // --- Custom MDX Components ---
@@ -79,12 +21,12 @@ export const mdxComponents = {
   // Alerts (and variants as their own)
   Alert,
   alert: Alert,
-  Info: (props: any) => <Alert type="info" {...props} />,
-  info: (props: any) => <Alert type="info" {...props} />,
-  Warning: (props: any) => <Alert type="warning" {...props} />,
-  warning: (props: any) => <Alert type="warning" {...props} />,
-  Issue: (props: any) => <Alert type="issue" {...props} />,
-  issue: (props: any) => <Alert type="issue" {...props} />,
+  Info,
+  info: Info,
+  Warning,
+  warning: Warning,
+  Issue,
+  issue: Issue,
 
   // --- Headers ---
   h1: (props: React.ComponentProps<"h1">) => (
